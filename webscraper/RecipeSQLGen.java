@@ -9,7 +9,7 @@
  *
  * Usage:
  *   1) compile: bash$> javac RecipeSQLGen.java
- *   2) run:     bash$> java Run recipes
+ *   2) run:     bash$> java Main recipes
  * 
  * Input:
  *   1) recipes: a text file containing a variable-length list of
@@ -24,13 +24,14 @@
 import java.io.*;
 import java.util.*;
 import java.lang.Object;
+import org.jsoup.Jsoup;
 
-class Run {
-  public static void main(String[] argv) throws Exception {
-
+class Main
+{
+  public static void main(String[] argv) throws Exception
+  {
     int i, n, listsize = 0, garbageflag = 0;
     char c;
-
     String query = "", recipe = "";
     ArrayList<String> recipes = new ArrayList<String>();    
     FileInputStream f;
@@ -41,7 +42,6 @@ class Run {
       while ((i = f.read()) != -1)
       {
         c = (char) i;
-
 
         // If end of line, append String recipe to ArrayList recipes.
         if (c == '\n')
@@ -84,6 +84,5 @@ class Run {
       // Iterate over this data structure and construct an SQL subquery (sql-ify)
       // Append subquery to query.
     }
-    System.out.println(query);
   }
 }
