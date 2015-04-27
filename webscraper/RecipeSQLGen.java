@@ -36,6 +36,8 @@ class Main
   {
     int i, n, listsize = 0, garbageflag = 0;
     char c;
+
+    // TODO: Write query to create database and tables
     String query = "CREATE TABLE something something mysql\n", subquery, recipe = "", recipeurl;
     ArrayList<String> recipes = new ArrayList<String>();    
     FileInputStream f;
@@ -45,6 +47,7 @@ class Main
       f = new FileInputStream(argv[0]);
       while ((i = f.read()) != -1)
       {
+        // f.read() returns an int, so cast to char
         c = (char) i;
 
         // If end of line, append String recipe to ArrayList recipes.
@@ -82,12 +85,13 @@ class Main
       recipe = it.next();
 
       // TODO: For each recipe, issue HTTP GET. Some sort of Google Search. Grab URL of recipe page.
-      recipeurl = "http://allrecipes.com/recipe/mouses-macaroni-and-cheese/"; // For example, replace with appropriate implementation of search/URL scrape.
+      recipeurl = "http://allrecipes.com/Recipe/Risotto-alla-Milanese/";
+      // For example; replace with appropriate implementation of search/URL scrape.
 
-      // Recipe class parses the HTML and loads data into Recipe object
+
       Recipe r = new Recipe(recipeurl);
 
-//      System.out.println(r.toString());
+      // System.out.println(r.toString());
 
       // TODO: Iterate over this data structure and construct an SQL subquery (sql-ify)
       subquery = "INSERT into table blah blah blah" + r.url;
@@ -115,11 +119,29 @@ class Recipe
     instructions = getInstructions(src, doc);
   }
 
+  // for debugging purposes
   public String toString()
   {  
-    return "Recipe:\n\turl: " + url + "\n\ting: " + ingredients.toString() + "\n\tins: " + instructions.toString() + "\n";
+    String ret = "Recipe:\n\turl: " + url + "\n\tingreds: " + ingredients.toString() + "\n\tinsns: \n";
+    Iterator<String> it = instructions.iterator();
+    int i = 0;
+    while (it.hasNext())
+    {
+      ret += "\t\t" + i + ": " + it.next() + "\n";
+      i++;
+    }
+    return ret;
   }
 
+  /* getIngredients
+   *
+   * Input:
+   *   src - source url to scrape ingredients from
+   *   doc - jsoup object representing the DOM of src
+   *
+   * Output:
+   *   ArrayList of Ingredient objects, each containing name, quantity, and units
+   */
   public ArrayList<Ingredient> getIngredients(String src, Document doc)
   {
     Ingredient i;
@@ -127,30 +149,59 @@ class Recipe
     // TODO: write a regex to extract site name from url.
     // e.g. http://allrecipes.com/recipe/mouses-macaroni-and-cheese/ -> allrecipes.com
 
-    String n, q, u, site = "some regex";
+    String n, q, u, amt, site = "some regex";
     ArrayList<Ingredient> is = new ArrayList<Ingredient>();
 
     site = "allrecipes"; // delete after regex works
     
     if ("allrecipes" == site)
     {
+      // In the allrecipes recipe pages, the ingredients are located inside <p class="fl-ing">
       Elements ps = doc.select("p.fl-ing");
       for (Element p : ps)
       {
+        // Extract innner html from elements containing ingredient name and amount
         n = p.select(".ingredient-name").html();
-        u = p.select(".ingredient-amount").html();
+        // TODO: May want to further process name?
+
+        amt = p.select(".ingredient-amount").html();
+
+        // Split amount into quantity (numerical) and units (alpabetical)
+        // All characters that are not letters (i.e., digits, spaces, and /) belong to quantity
+        // e.g. "1 1/4"
         int j;
-        for (j = 0; !Character.isLetter(u.charAt(j)) && j < u.length(); j++) {}
-        j--;
+        for (j = 0; j < amt.length() && !Character.isLetter(amt.charAt(j)); j++) {}
 
-        q = u.substring(0, j); // get numerical part
-        u = u.substring(j + 1); // get alphabetical part
+        // TODO: if there is something in parenthesis, that is the units! FIX
 
-        // singularize units
-        if (u.charAt(u.length() - 1) == 's')
+        // TODO: does this ever happen when amt.length() != 0 ?
+        if (j == 0) // e.g. "salt and pepper to taste"
         {
-          u = u.substring(0, u.length() - 1);
-        }          
+          q = ""; // should do something better than this eventually
+          u = "";
+        }
+        else
+        {
+          if (j != amt.length()) // there are units
+          {
+            j--;  
+            q = amt.substring(0, j);
+
+            // Remaining characters represent belong to units, e.g. "tablespoon"
+            u = amt.substring(j + 1);
+
+            // singularize units (remove 's' from the end)
+            if (u.length() > 0 && u.charAt(u.length() - 1) == 's')
+            {
+              u = u.substring(0, u.length() - 1);
+            }
+          }
+          else // no units
+          {
+            q = amt;
+            u = "";
+          }
+        }
 
         i = new Ingredient(n, q, u);
         is.add(i);
@@ -181,6 +232,7 @@ class Recipe
 
     if ("allrecipes" == site)
     {
+      // Instructions are inside an <ol> immediately following <div id="msgDirections">
       Elements ol = doc.select("div#msgDirections + ol");
       Elements lis = ol.select("li");
       for (Element li : lis)
