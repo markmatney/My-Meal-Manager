@@ -5,6 +5,16 @@
  */
 
 /* Toggle Styles */
+.navbar-brand {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin: auto;
+}
+.navbar-right {
+    margin-right: 10px;
+}
 
 #wrapper {
     padding-left: 0;
