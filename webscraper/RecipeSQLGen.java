@@ -102,25 +102,26 @@ class Main
       recipe = it.next();
 
       // For each recipe, use Jsoup to do a Google search, then grab URL of recipe page.
-      String recipeName = recipe.replaceAll(" ", "+").replaceAll("&", "%26").replaceAll("\n", "");
+      String recipeName = recipe.replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\n", "");
 
       System.out.println(recipeName);
 
-      String url = "https://www.google.com/search?num=1&as_sitesearch=allrecipes.com&as_q=";
+      //String url = "https://www.google.com/search?num=1&as_sitesearch=allrecipes.com&as_q=";
+      String url = "http://allrecipes.com/search/default.aspx?wt=";
       url = url.concat(recipeName);
 
       //REMOVE LATER
-      System.out.println("Google search URL: " + url);
+      System.out.println("Allrecipes search URL: " + url);
 
-      Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0")
-			.timeout(5000).get(); // Java representation of DOM that our class methods will parse
-      Elements links = doc.select("h3.r > a");
+      Document doc = Jsoup.connect(url).get(); // Java representation of DOM that our class methods will parse
+      Elements links = doc.select("a.title");
       recipeurl = "";
       for (Element link : links)
       {
         // Extract innner html from elements containing ingredient name and amount
-        doc = Jsoup.connect(link.attr("abs:href")).get();
-        recipeurl = doc.location();
+        //doc = Jsoup.connect(link.attr("abs:href")).get();
+        //recipeurl = doc.location();
+        recipeurl = link.attr("abs:href");
       }
 
       //REMOVE LATER
@@ -132,7 +133,7 @@ class Main
 
       Recipe r = new Recipe(recipeurl);
 
-      //System.out.println(r.toString());
+      System.out.println(r.toString());
 
       // TODO: Iterate over this data structure and construct an SQL subquery (sql-ify)
       subquery = "INSERT into table blah blah blah" + r.url;
@@ -140,7 +141,7 @@ class Main
       // Append subquery to query.
       query += subquery + "\n";
     }
-    System.out.println(query);
+    //System.out.println(query);
   }
 }
 
