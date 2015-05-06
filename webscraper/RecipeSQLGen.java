@@ -23,6 +23,7 @@
 
 import java.io.*;
 import java.util.*;
+import java.net.*;
 import java.lang.Object;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
@@ -36,6 +37,22 @@ class Main
   {
     int i, n, listsize = 0, garbageflag = 0;
     char c;
+
+/*
+    //HTTP GET test
+    String url = "https://www.google.com/search?num=1&as_q=grilled+cheese&as_sitesearch=allrecipes.com";
+
+    Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0")
+			.timeout(5000).get(); // Java representation of DOM that our class methods will parse
+    Elements links = doc.select("h3.r > a");
+    for (Element link : links)
+    {
+        // Extract innner html from elements containing ingredient name and amount
+       doc = Jsoup.connect(link.attr("abs:href")).get();
+        System.out.println(doc.location());
+    }
+*/
+
 
     // TODO: Write query to create database and tables
     String query = "CREATE TABLE something something mysql\n", subquery, recipe = "", recipeurl;
@@ -84,14 +101,38 @@ class Main
     {
       recipe = it.next();
 
-      // TODO: For each recipe, issue HTTP GET. Some sort of Google Search. Grab URL of recipe page.
-      recipeurl = "http://allrecipes.com/Recipe/Risotto-alla-Milanese/";
+      // For each recipe, use Jsoup to do a Google search, then grab URL of recipe page.
+      String recipeName = recipe.replaceAll(" ", "+").replaceAll("&", "%26").replaceAll("\n", "");
+
+      System.out.println(recipeName);
+
+      String url = "https://www.google.com/search?num=1&as_sitesearch=allrecipes.com&as_q=";
+      url = url.concat(recipeName);
+
+      //REMOVE LATER
+      System.out.println("Google search URL: " + url);
+
+      Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0")
+			.timeout(5000).get(); // Java representation of DOM that our class methods will parse
+      Elements links = doc.select("h3.r > a");
+      recipeurl = "";
+      for (Element link : links)
+      {
+        // Extract innner html from elements containing ingredient name and amount
+        doc = Jsoup.connect(link.attr("abs:href")).get();
+        recipeurl = doc.location();
+      }
+
+      //REMOVE LATER
+      System.out.println("First result allrecipes URL: " + recipeurl + "\n");
+
+      //recipeurl = "http://allrecipes.com/Recipe/Risotto-alla-Milanese/";
       // For example; replace with appropriate implementation of search/URL scrape.
 
 
       Recipe r = new Recipe(recipeurl);
 
-      // System.out.println(r.toString());
+      //System.out.println(r.toString());
 
       // TODO: Iterate over this data structure and construct an SQL subquery (sql-ify)
       subquery = "INSERT into table blah blah blah" + r.url;
@@ -102,6 +143,8 @@ class Main
     System.out.println(query);
   }
 }
+
+ 
 
 class Recipe
 {
