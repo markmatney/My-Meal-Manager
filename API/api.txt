@@ -1,0 +1,128 @@
+/////////////////////////////////////////////////////////////////////////
+    /* getUserID
+	
+	Takes username and converts it to ID
+	*/
+	function getUserID($name)
+/////////////////////////////////////////////////////////////////////////
+	/* addUser
+	
+	Takes username,password and adds to user list
+	*/
+	function addUser($name,$pw)
+/////////////////////////////////////////////////////////////////////////	
+	/*  addToInventory
+
+	Takes as input a UserId, ingredient name, quantity, and units
+	and adds the ingredient to the corresponding User's InventoryList.
+	If ingredient already exists it will increment the quantity by the given amount.
+	*/
+	function addToInventory($userid, $ingredient, $qty, $units)
+/////////////////////////////////////////////////////////////////////////	
+	/*  removeFromInventory
+
+	Takes as input a UserId, ingredient name, quantity, and units
+	and removes or decrements the given amount of ingredients 
+	from the corresponding User's InventoryList.
+	*/
+	function removeFromInventory($userid, $ingredient, $qty, $units)
+/////////////////////////////////////////////////////////////////////////	
+	/* getInventory
+
+	Takes as input a UserId and prints out
+	all items in the corresponding InventoryList in the format:
+	<Quantity> <Units> <IngredientName> <br>
+	*/
+	function getInventory($userid)
+/////////////////////////////////////////////////////////////////////////	
+	/*  addToGrocery
+	 
+	Takes as input a UserId, ingredient name, quantity, and units
+	and adds the ingredient to the corresponding User's GroceryList.
+	If ingredient already exists it will increment the quantity by the given amount.
+	*/
+	function addToGrocery($userid, $ingredient, $qty, $units)
+/////////////////////////////////////////////////////////////////////////	
+	/*  removeFromGrocery
+	
+	Takes as input a UserId, ingredient name, quantity, and units
+	and removes or decrements the given amount of ingredients 
+	from the corresponding User's GroceryList.
+	*/
+	function removeFromGrocery($userid, $ingredient, $qty, $units)
+/////////////////////////////////////////////////////////////////////////
+	/* getGrocery
+
+	Takes as input a UserId and prints out
+	all items in the corresponding GroceryList in the format:
+	<Quantity> <Units> <IngredientName> <br>
+	*/
+	function getGrocery($userid)
+/////////////////////////////////////////////////////////////////////////	
+	/* getRecipeID
+	
+	Takes recipe name and converts it to ID
+	*/
+	function getRecipeID($recipe)
+/////////////////////////////////////////////////////////////////////////	
+	/* addRecipe
+
+	Takes as input a name, url, image, cooking time(minutes), instructions and
+	adds the recipe to the list of recipes. 
+	*/
+	function addRecipe($id, $name,$url,$time,$instructions)
+/////////////////////////////////////////////////////////////////////////	
+	/* addIngredientToRecipe
+
+	Takes as input a recipe name, ingredient name, quantity, units
+	and adds them to the ingredients table for that recipe.
+	*/
+	function addIngredientToRecipe($recipe, $ingredient, $qty, $units)
+/////////////////////////////////////////////////////////////////////////	
+	/* getRecipeIngredients
+	
+	Takes as input a Recipe name and outputs the
+	Recipe's ingredients in the format:
+	<Quantity1> <Units1> <IngredientName1> <br>
+	<Quantity2> <Units2> <IngredientName2> <br>
+	...
+	*/
+	function getRecipeIngredients($recipe)
+/////////////////////////////////////////////////////////////////////////	
+	/* getRecipe
+
+	Takes as input a Recipe name and outputs
+	the Recipe in the format:
+	<RecipeName> <br>
+	<URL> <br>
+	<Image> <br>
+	<TotalCookingTime> <br>
+	<Quantity1> <Units1> <IngredientName1> <br>
+	<Quantity2> <Units2> <IngredientName2> <br>
+	...
+	<Instructions> <br>
+	*/
+	function getRecipe($recipe)
+/////////////////////////////////////////////////////////////////////////	
+	/*  addRecipeToUser
+
+	Takes as input a UserId and Recipe Name and adds the recipe
+	to the user's saved RecipeList.
+	*/
+	function addRecipeToUser($recipe,$userid)
+/////////////////////////////////////////////////////////////////////////	
+	/* getUserRecipes
+
+	Takes as input a UserID and outputs the
+	associated RecipeList in the format:
+	<RecipeName> <br>
+	*/
+	function getUserRecipes($userid)
+/////////////////////////////////////////////////////////////////////////	
+	/* addRecipeToGrocery
+	
+	Takes as input a recipe name and UserID and adds all the
+	recipe's ingredients to the User's GroceryList.
+	*/
+	function addRecipeToGrocery($recipe, $userid)
+/////////////////////////////////////////////////////////////////////////
