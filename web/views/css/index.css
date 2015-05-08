@@ -1,0 +1,136 @@
+body {
+	background: url(/~jmpham/img/hero-image.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-opacity: 0.5;
+	z-index:0;
+	color: black;
+}
+h1 {
+	font-size: 120px;
+	margin-bottom: 60px;
+}
+h2 {
+	font-size: 80px;
+	margin-bottom: 35px;
+	font-weight: bold;
+}
+.wrapper {
+	height: 10em;
+	position: relative;
+}
+#hero-page {
+    margin: 30px;
+    background-color: #ffffff;
+    opacity: 0.8;
+	text-align: center;
+	margin: 0;
+	position: absolute;
+	top: 70%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, 0%);
+}
+.btn-primary {
+	border-radius: 2px;
+	color: white;
+	font-size: 20px; 
+	margin: 20px 0px 45px 0px;
+}
+.btn-success {
+	width: 100%;
+}
+.form-control {
+	border-radius: 2px;
+}
+input {
+	margin: 5px 0px;
+}
+#getstarted {
+  visibility: hidden;
+  position: fixed;
+  width: 25%;
+  left: 50%;
+  margin-left: -150px;
+  top: 40%;
+  margin-top: -100px;
+  background: #FFF;
+  z-index: 20;
+  -webkit-box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+  box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+}
+#register, 
+#login{
+	position: absolute;
+	top: 0px;
+	width: 88%;	
+	padding: 18px 6% 60px 6%;
+	margin: 0 0 35px 0;
+	background: rgb(247, 247, 247);
+	border: 1px solid rgba(147, 184, 189,0.8);
+	-webkit-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	   -moz-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	        box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	-webkit-box-shadow: 5px;
+	-moz-border-radius: 5px;
+		 border-radius: 5px;
+}
+#register {
+	z-index: 21;
+	opacity: 0;
+}
+#login {
+	z-index: 22;
+}
+#toregister:target ~ #wrapper #register,
+#tologin:target ~ #wrapper #login{
+	z-index: 22;
+	-webkit-animation-delay: .6s;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-delay: .6s;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-delay: .6s;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-delay: .6s;
+	-ms-animation-timing-function: ease-in;
+	animation-delay: .6s;
+	animation-timing-function: ease-in;
+	-webkit-animation-name: scaleIn;
+	-moz-animation-name: scaleIn;
+	-ms-animation-name: scaleIn;
+	-o-animation-name: scaleIn;
+	animation-name: scaleIn;
+}
+#toregister:target ~ #wrapper #login,
+#tologin:target ~ #wrapper #register{
+	-webkit-animation-timing-function: ease-out;
+	-moz-animation-timing-function: ease-out;
+	-o-animation-timing-function: ease-out;
+	-ms-animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
+	-webkit-animation-name: scaleOut;
+	-moz-animation-name: scaleOut;
+	-ms-animation-name: scaleOut;
+	-o-animation-name: scaleOut;
+	animation-name: scaleOut;
+}
+
+/** the actual animation, credit where due : http://daneden.me/animate/ ***/
+.animate{
+	-webkit-animation-duration: 0.5s;
+	-webkit-animation-fill-mode: both;
+	
+	-moz-animation-duration: 0.5s;
+	-moz-animation-fill-mode: both;
+	
+	-o-animation-duration: 0.5s;
+	-o-animation-fill-mode: both;
+	
+	-ms-animation-duration: 0.5s;
+	-ms-animation-fill-mode: both;
+	
+	animation-duration: 0.5s;
+	animation-fill-mode: both;
+}

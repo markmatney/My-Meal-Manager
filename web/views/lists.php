@@ -56,44 +56,85 @@
                 <ul class="sortable">
                     <?php 
                         $grocery_list = array(
-                            'carrots' => array('text'=>'Carrots', 'url'=>'lists.php'),
-                            'milk' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'kale' => array('text'=>'Kale', 'url'=>'#'),
-                            'a' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'b' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'c' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'd' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'e' => array('text'=>'Milk', 'url'=>'recipes.php'),
-                            'f' => array('text'=>'Milk', 'url'=>'recipes.php')
+                            'carrots' => array('text'=>'Carrots', 'quantity'=>'1', 'units'=>'sticks'),
+                            'milk' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'kale' => array('text'=>'Kale', 'quantity'=>'3', 'units'=>'bunches'),
+                            'a' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'b' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'c' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'd' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'e' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'f' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'g' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'h' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'i' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'j' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'k' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'l' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'm' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'n' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'o' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
+                            'p' => array('text'=>'Tea', 'quantity'=>'2', 'units'=>'boxes')
                         );
                         foreach ($grocery_list as $item) {
-                            echo "<li class='ui-state-default item'>";
-                            echo "<input type='checkbox' name='ingredient' value='{$item['text']}'><label>{$item['text']}</label>";
+                            echo "<li class='ui-state-default item edit-item'>";
+                            echo "<label class='item-name'>{$item['text']}</label>";
+                            echo "<label class='item-quantity'>{$item['quantity']}</label>";
+                            echo "<label class='item-units'>{$item['units']}</label>";
                             echo "</li>";
                         }
                     ?>
                 </ul>
+                 <form class="add">
+                    <input class="col-xs-4 add-item" type="text" name="ingredient-name" placeholder="Ingredient Name">
+                    <input class="col-xs-3 add-item" type="text" name="quantity" placeholder="Quantity">
+                    <input class="col-xs-2 add-item" type="text" name="units" placeholder="Units">
+                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
             </div>
             <div id="inventory">
                 <h2>Inventory</h2><hr>
                 <ul class="sortable">
                     <?php 
                         $inventory_list = array(
-                            'onions' => array('text'=>'Onions', 'url'=>'lists.php'),
-                            'garlic' => array('text'=>'Garlic', 'url'=>'recipes.php')
+                            'onions' => array('text'=>'Onions', 'quantity'=>'1', 'units'=>'units'),
+                            'garlic' => array('text'=>'Garlic', 'quantity'=>'2', 'units'=>'cloves ')
                         );
                         foreach ($inventory_list as $item) {
-                            echo "<li class='ui-state-default item'>";
-                            echo "<input type='checkbox' name='ingredient' value='{$item['text']}'><label>{$item['text']}</label>";
+                            echo "<li class='ui-state-default item edit-item'>";
+                            echo "<label class='item-name'>{$item['text']}</label>";
+                            echo "<label class='item-quantity'>{$item['quantity']}</label>";
+                            echo "<label class='item-units'>{$item['units']}</label>";
                             echo "</li>";
                         }
                     ?>
                 </ul>
+                <form class="add">
+                    <input class="col-xs-4 add-item" type="text" name="ingredient-name" placeholder="Ingredient Name">
+                    <input class="col-xs-3 add-item" type="text" name="quantity" placeholder="Quantity">
+                    <input class="col-xs-2 add-item" type="text" name="units" placeholder="Units">
+                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
             </div>
+            <div id="item-edit-popup">
+                <form>
+                    <div class="form-group">
+                        <label for="ingredient-name">Ingredient Name</label>
+                        <input type="text" class="form-control" id="ingredient-name" placeholder="Enter Ingredient Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="units">Units</label>
+                        <input type="text" class="form-control" id="units" placeholder="Enter Units">
+                    </div>
+                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
             </div>
         </div>
         <!-- end PageContent -->
-
     </div>
 
     <!-- jQuery -->
@@ -113,9 +154,36 @@
     $(document).ready(function () {
       $('div#lists').find('ul.sortable').sortable({
         connectWith: 'ul.sortable',
-        placeholder: 'sortable-placeholder'
-            });
+        placeholder: 'sortable-placeholder',
+        opacity: 0.7
+        });
     });
+
+    document.addEventListener("keypress", escape, false);
+    function escape(e) {
+        var keyCode = e.keyCode;
+        if (keyCode == 27) {
+            var popup = document.getElementById('item-edit-popup');
+            popup.style.display = "none";
+        }
+    }
+    function popup() {
+        var popup = document.getElementById('item-edit-popup');
+        popup.style.display = "block";
+    }
+
+    $(".edit-item").hover(
+      function() {
+        $( this ).append( $( "<div id='edit' class='btn-group'><button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-pencil edit'></span></button><ul class='dropdown-menu pull-right'><li><a href='#' onclick='popup();'>Edit Item</a></li><li><a href='#'>Delete Item</a></li></ul></div>" ) );
+      }, function() {
+        $( this ).find( "#edit" ).remove();
+      }
+    );
+
+    $(".edit-item").click(function(e) {
+        
+    });
+
     </script>
 
 

@@ -3,8 +3,8 @@
     $sidebar= array(
         'lists' => array('text'=>'My Lists', 'url'=>'lists.php'),
         'recipes' => array('text'=>'Recipes', 'url'=>'recipes.php'),
-        'explore' => array('text'=>'Explore', 'url'=>'#'),
-        'search' => array('text'=>'Search', 'url'=>'#')
+        'explore' => array('text'=>'Explore', 'url'=>'explore.php'),
+        'logout' => array('text'=>'Log Out', 'url'=>'#'),
     );
 
     function generateSideBar($menu, $user) {

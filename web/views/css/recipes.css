@@ -17,3 +17,6 @@ h2 {
 button {
 	float: right;
 }
+label {
+	margin-left: 10px;
+}

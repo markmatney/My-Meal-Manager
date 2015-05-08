@@ -7,6 +7,9 @@ ul {
 	padding: 0px;
 	margin: 0px;
 }
+#wrapper {
+	overflow: hidden;
+}
 #grocery-list {
 	float: left;
 	width: 50%;
@@ -15,6 +18,7 @@ ul {
 	padding: 30px;
 	border-right: 10px solid white;
 	background-color: #F7EE78;
+	margin-bottom: 20px;
 }
 #inventory {
 	float: left;
@@ -43,11 +47,72 @@ hr {
 	background-color: #F7EE78;
 }
 .sortable-placeholder {
-    border: 3px dashed #8BABD6;
+    border: 2px dashed #8BABD6;
     height: 40px;
     background: white;
+    opacity: 0.5;
 }
 label {
 	font-size: 125%;
 	margin-left: 10px;
+}
+#edit {
+	padding: 5px;
+	float: right;
+}
+.edit-btn {
+	background-color: transparent;
+	border: none;
+}
+.add-item {
+	background-color: white;
+	border: none;
+	opacity: 0.5;
+	margin: 5px 5px 5px 0px;
+	border-radius: 5px;
+}
+.btn.no-outline {
+	background-color: transparent;
+}
+.btn-primary.no-outline {
+	float: right;
+	color: #8BABD6;
+	border: none;
+}
+.btn-primary.no-outline:hover, .btn-primary.no-outline:focus, .btn-primary.no-outline:active, .btn-primary.no-outline.active, .open > .dropdown-toggle.btn-primary {
+	float: right;
+    color: #33a6cc;
+    border: none;
+}
+.btn-primary.no-outline:active, .btn-primary.no-outline.active {
+	float: right;
+    color: #007299;
+    box-shadow: none;
+    border: none;
+}
+.item-name {
+	background-color: transparent;
+	border: none;
+	font-size: 15px;
+	font-weight: bold;
+	color: black;
+	width: 60%;
+}
+.item-quantity, .item-units {
+	text-align: center;
+	color: gray;
+}
+#item-edit-popup {
+  display: none;
+  position: fixed;
+  width: 25%;
+  left: 50%;
+  margin-left: -150px;
+  top: 40%;
+  margin-top: -100px;
+  background: #FFF;
+  z-index: 20;
+  -webkit-box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+  box-shadow:  0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+  padding: 15px;
 }
