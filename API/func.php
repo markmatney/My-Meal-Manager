@@ -36,7 +36,7 @@ class databaseAPI {
 	     $userid = $id['UserID'];
 		  if($userid == 0)
 		    { print "User doesn't exist!";
-			 exit(1)}
+			 exit(1);}
 		  else
 	         return $userid;
 	}
