@@ -28,19 +28,24 @@ class databaseAPI {
     /* getUserID
 	
 	Takes username and converts it to ID
+	Returns the UserID if username exists otherwise
+	outputs error message.
 	*/
 	function getUserID($name){
 	     $id =  mysql_fetch_assoc(@mysql_query("SELECT UserID FROM UserUNandID WHERE '$name' = UserName"));
-	     $userid = $id['UserD'];
+	     $userid = $id['UserID'];
 		  if($userid == 0)
-		     print "User doesn't exist!";
+		    { print "User doesn't exist!";
+			 exit(1)}
 		  else
 	         return $userid;
 	}
 	
+	
 	/* addUser
 	
 	Takes username,password and adds to user list
+	Outputs error if username already exists
 	*/
 	function addUser($name,$pw){
 	    if(($name != NULL) && ($pw != NULL)){
@@ -48,12 +53,35 @@ class databaseAPI {
 		  $countdata = mysql_fetch_assoc($count);
 		  if($countdata['count'] >= 1){
 		         print "User already exsists!";
-                return;
+               exit(1);
 				}
           else
 		  {   
-		       $id = generateid();
-              @mysql_query("INSERT INTO UserUNandID VALUES	('$id','$name','$pw')");
+              @mysql_query("INSERT INTO UserUNandID VALUES	(0,'$name','$pw')");
+          }			  
+		}		
+	}
+	
+	/* checkIfValudUser
+	
+	Takes in username,password and returns true if correct match,
+	false otherwise.
+	*/
+	function checkIfValidUser($name,$pw){
+	    if(($name != NULL) && ($pw != NULL)){
+              $count = @mysql_query("SELECT COUNT(*) as count FROM UserUNandID  WHERE ('$name' = UserName)");
+		  $countdata = mysql_fetch_assoc($count);
+		  if($countdata['count'] <= 0){
+		         return false;
+		  }
+          else
+		  {   
+              $userinfo = @mysql_query("SELECT * FROM UserUNandID  WHERE ('$name' = UserName)");
+			  $userdata = mysql_fetch_assoc($userinfo);
+			  $pwinfo = $userdata['Password'];
+			  if($pw == $pwinfo)
+			     return true;
+			  else return false;
           }			  
 		}		
 	}
@@ -102,16 +130,28 @@ class databaseAPI {
 
 	/* getInventory
 
-	Takes as input a UserId and prints out
-	all items in the corresponding InventoryList in the format:
-	<Quantity> <Units> <IngredientName> <br>
+	Takes as input a UserId and returns a JSON array in the format:
+	
+	[["<Quantity1>", "<Units1>", "<IngredientName1>"],
+	["<Quantity2>", "<Units2>", "<IngredientName2>"],
+	....]
 	*/
 	function getInventory($userid){
 		$invenlist = @mysql_query("SELECT * FROM Inventory WHERE UserID = '$userid' ");
+		$array = array();
+		$i = 0;
 		while($row = @mysql_fetch_assoc($invenlist)) 
 		{
-					print $row['Quantity']  . " " .  $row['Units'] . " " .  $row['IngredientName'] . '<br>' ;
+		   $name=$row['IngredientName'];
+		   $qty = $row['Quantity'];
+		   $unit = $row['Units'];
+		     $array2 = array($qty,$unit,$name);
+			$array[$i] = $array2;
+			$i = $i+1;
+			
+				
 		}
+	return json_encode($array);
 	}
 
 	/*  addToGrocery
@@ -156,16 +196,26 @@ class databaseAPI {
 
 	/* getGrocery
 
-	Takes as input a UserId and prints out
-	all items in the corresponding GroceryList in the format:
-	<Quantity> <Units> <IngredientName> <br>
+	Takes as input a UserId and returns a JSON array in the format:
+	[["<Quantity1>", "<Units1>", "<IngredientName1>"],
+	 ["<Quantity2>", "<Units2>", "<IngredientName2>"],
+	....]
 	*/
 	function getGrocery($userid){
 		$list = @mysql_query("SELECT * FROM GroceryList WHERE UserID = '$userid' ");
+		$array = array();
+		$i = 0;
 		while($row = @mysql_fetch_assoc($list)) 
 		{
-			print $row['Quantity']  . " " .  $row['Units'] . " " .  $row['IngredientName'] . '<br>' ;
+			 $name=$row['IngredientName'];
+		   $qty = $row['Quantity'];
+		   $unit = $row['Units'];
+		     $array2 = array($qty,$unit,$name);
+			$array[$i] = $array2;
+			$i = $i+1;
+			
 		}
+			return json_encode($array);
 	}
     
 	/* getRecipeID
@@ -186,8 +236,8 @@ class databaseAPI {
 	Takes as input a name, url, image, cooking time(minutes), instructions and
 	adds the recipe to the list of recipes. 
 	*/
-	function addRecipe($id, $name,$url,$time,$instructions){
-	   @mysql_query("INSERT INTO Recipes VALUES ('$id','$name','$url',NULL, '$time', '$instructions')");
+	function addRecipe($name,$url,$time,$instructions){
+	   @mysql_query("INSERT INTO Recipes VALUES (0,'$name','$url',NULL, '$time', '$instructions')");
 	}
 	 
 	/* addIngredientToRecipe
@@ -212,45 +262,53 @@ class databaseAPI {
 
 	/* getRecipeIngredients
 	
-	Takes as input a Recipe name and outputs the
+	Takes as input a Recipe name and outputs a JSON array of the
 	Recipe's ingredients in the format:
-	<Quantity1> <Units1> <IngredientName1> <br>
-	<Quantity2> <Units2> <IngredientName2> <br>
-	...
+	[["<Quantity1>", "<Units1>", "<IngredientName1>"],
+	 ["<Quantity2>", "<Units2>", "<IngredientName2>"],
+	....]
 	*/
 	function getRecipeIngredients($recipe){
 	   $recipeid = $this->getRecipeID($recipe);
-	   {  
+	    $array = array();
+		$i = 0;
 	       $list = @mysql_query("SELECT * FROM Ingredients WHERE Recipe = '$recipeid'");
 		   while($row = @mysql_fetch_assoc($list)) 
-		   {  
-			  print $row['Quantity']  . " " .  $row['Units'] . " " .  $row['IngredientName'] . '<br>' ;
+		   {   
+		   $name=$row['IngredientName'];
+		   $qty = $row['Quantity'];
+		   $unit = $row['Units'];
+		     $array2 = array($qty,$unit,$name);
+			$array[$i] = $array2;
+			$i = $i+1;
+			
 		   }	
-		}
+		return $array;
 	}
 
 	/* getRecipe
 
-	Takes as input a Recipe name and outputs
+	Takes as input a Recipe name and outputs a JSON array of
 	the Recipe in the format:
-	<RecipeName> <br>
-	<URL> <br>
-	<Image> <br>
-	<TotalCookingTime> <br>
-	<Quantity1> <Units1> <IngredientName1> <br>
-	<Quantity2> <Units2> <IngredientName2> <br>
-	...
-	<Instructions> <br>
+	["<RecipeName>" ,"<URL>" ,"<Image>","<TotalCookingTime>",
+	[["<Quantity1>", "<Units1>", "<IngredientName1>"],
+	 ["<Quantity2>", "<Units2>", "<IngredientName2>"],
+	....], 
+	"<Instructions>"]
 	*/
 	function getRecipe($recipe){
 	        $recipeid = $this->getRecipeID($recipe);
 		     $list = mysql_fetch_assoc(@mysql_query("SELECT * FROM Recipes WHERE RecipeID = '$recipeid'"));
-			 print $list['RecipeName'] . '<br>' ;
-			 print $list['URL'] . '<br>' ;
-		     print $list['Image'] . '<br>' ;
-		     print $list['TotalCookingTime'] . '<br>' ;
-		     $this->getRecipeIngredients($recipe);
-		     print $list['Instructions'] . '<br>' ;
+			 
+			 $name =$list['RecipeName'];
+			 $url= $list['URL'] ;
+		     $img = $list['Image'];
+		     $time = $list['TotalCookingTime']  ;
+			//$ingredients = "";
+		     $ingredients = $this->getRecipeIngredients($recipe);
+		     $instructions = $list['Instructions'];
+			 $array = array($name,$url,$img,$time,$ingredients,$instructions);
+			 return json_encode($array);
 	    
 	}
 	
@@ -275,17 +333,22 @@ class databaseAPI {
 	/* getUserRecipes
 
 	Takes as input a UserID and outputs the
-	associated RecipeList in the format:
-	<RecipeName> <br>
+	associated RecipeList in the  JSON array format:
+	["<RecipeName1>","<RecipeName2>",...]
 	*/
 	function getUserRecipes($userid){
 	   $list = @mysql_query("SELECT * FROM UserRecipes WHERE UserID = '$userid' ");
-	   while($row = @mysql_fetch_assoc($list)) 
+	  $array = array();
+		$i = 0;
+	  while($row = @mysql_fetch_assoc($list)) 
 	   {   
 		   $recipeid = $row['RecipeID'];
 		   $recipename = mysql_fetch_assoc(@mysql_query("SELECT RecipeName FROM Recipes WHERE '$recipeid' = RecipeID"));
-		   print  $recipename['RecipeName'] . '<br>' ;	
+		   $name =  $recipename['RecipeName'] ;	
+		   $array[$i] = $name ;
+		   	$i = $i+1;
 	   }
+	   return json_encode($array);
 	}
 
 
