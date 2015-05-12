@@ -13,9 +13,9 @@ include 'func.php';
    $pw = $_GET["pw"];
    //$api->addUser($name,$pw);
    if( $api->checkIfValidUser($name,$pw))
-   {  echo "valid";
-	 	 $user = $api->getUserID($name);
-		 echo $user;}
+    echo "valid";
+	 	 //$user = $api->getUserID($name);
+		// echo $user;
 	 else
 	   echo "invalid";
 
