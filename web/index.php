@@ -23,11 +23,11 @@
                 <a class="hiddenanchor" id="tologin"></a>
                 <div id="wrapper">
                     <div id="login" class="animate form">
-                        <form action="lists.php"> 
+                        <form action="login.php" method="post"> 
                             <h3>Log in</h3> 
-							<input class="form-control" type="Email" placeholder="Email address">
-							<input class="form-control" type="password" placeholder="Password">
-							<button type="submit" class="btn btn-success">Log in</button>
+							<input class="form-control" type="Email" name="username" placeholder="Email address">
+							<input class="form-control" type="password" name="password" placeholder="Password">
+							<button type="submit" name="submit" class="btn btn-success">Log in</button>
                             <p class="change_link">
 								Don't have an account?
 								<a href="#toregister" class="to_register">Sign up</a>
@@ -36,14 +36,12 @@
                     </div>
 
                     <div id="register" class="animate form">
-                        <form action="lists.php"> 
+                        <form action="register.php" method="post"> 
                             <h3> Sign up </h3> 
-							<input class="form-control" type="text" placeholder="First name">
-							<input class="form-control" type="text" placeholder="Last name">
-							<input class="form-control" type="Email" placeholder="Email address">
-							<input class="form-control" type="password" placeholder="Password">
-							<input class="form-control" type="password" placeholder="Confirm password">
-							<button type="submit" class="btn btn-success">Sign up</button>
+							<input class="form-control" type="Email" name="username" placeholder="Email address">
+							<input class="form-control" type="password" name="password1" placeholder="Password">
+							<input class="form-control" type="password" name="password2" placeholder="Confirm password">
+							<button type="submit" name="submit" class="btn btn-success">Sign up</button>
                             <p class="change_link">  
 								Already have an account?
 								<a href="#tologin" class="to_register">Log in</a>
