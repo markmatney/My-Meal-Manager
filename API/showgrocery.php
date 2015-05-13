@@ -31,7 +31,7 @@ $api = new databaseAPI;
 	    <?php
 		  
 	
-			$api->getGrocery(1);
+				echo ($api->getGrocery(1));
 			
 	    ?>
 	    </select>

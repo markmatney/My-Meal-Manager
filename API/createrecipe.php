@@ -13,24 +13,39 @@ include 'func.php';
    $url = $_GET["url"];
    $time = $_GET["time"];
    $instruction = $_GET["instruction"];*/
-   $name = 11;
+   $name = 22;
    $url = "url1";
    $time = "1";
    $instruction = "instruction1";
-   $id = $name;
-   $api->addRecipe($id,$name,$url,$time,$instruction);
-   $api->addIngredientToRecipe($name, 1, 1, 1);
-   $api->addIngredientToRecipe($name, 2, 1, 1);
-   /*$api->addIngredientToRecipe($name,5, 1, 1);*/
-    $api->getRecipe($name); //should be recipe1, url1,  , 1, 111, 112, instruction1
-   $api->addrecipeToUser($name,$name);
-     $api->addrecipeToUser(8,$name);
-   $api->getUserRecipes($name); //should be $name,8
-   $api->addRecipeToGrocery($name,1); // 111, 112 added to grocery list*/
+   //$id = $name;
+ // $api->addRecipe($name,$url,$time,$instruction);
+ //  $api->addIngredientToRecipe($name, 1, 1, 1);
+ // $api->addIngredientToRecipe($name, 2, 1, 1);
+  // $api->addIngredientToRecipe($name,5, 1, 1);
+  // echo ($api->getRecipeIngredients($name));
+  //echo ($api->getRecipe($name)); //should be recipe1, url1,  , 1, 111, 112, instruction1
+  // $api->addrecipeToUser(11,1);
+   // $api->addrecipeToUser(33,1);
+  //echo ($api->getUserRecipes(1)); //should be $name,8
+  // $api->addRecipeToGrocery($name,1); // 111, 112 added to grocery list*/
    /*
     
    */
    ?>
+
+   <?php/*
+   $ar2 = array();
+   for($ii=0;$ii<3;$ii++){
+$ar = array();
+for($i=0;$i<3;$i++)
+  { 
+    $ar[$i]=$i;
+  }
+  $ar2[$ii] = $ar;
+  }
+echo json_encode($ar2); // ["apple","orange","banana","strawberry"];
+*/
+?>
 
 <hr/>
         Recipe Maker</br>

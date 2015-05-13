@@ -30,7 +30,7 @@ include 'func.php';
 	 
 	    <?php
 		  
-			$api->getInventory(1);
+			echo ($api->getInventory(1));
 			
 	    ?>
 	    </select>

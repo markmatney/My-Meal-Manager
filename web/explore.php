@@ -73,10 +73,10 @@
             <div id="grid">
                 <div class="row">
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/0149359_Making-Taco_s4x3.jpg" class="img-responsive"/>
+                                <img src="./img/0149359_Making-Taco_s4x3.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -85,10 +85,10 @@
                         </a>
                     </div>
                      <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/ramen.jpg" class="img-responsive"/>
+                                <img src="./img/ramen.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -97,10 +97,10 @@
                         </a>
                     </div>
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/sample.jpg" class="img-responsive"/>
+                                <img src="./img/sample.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -111,10 +111,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/pinwheel-cookies-ck-1941056-x.jpg" class="img-responsive"/>
+                                <img src="./img/pinwheel-cookies-ck-1941056-x.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -123,10 +123,10 @@
                         </a>
                     </div>
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/BIG_TIMMY_BURGER-lg.jpg" class="img-responsive"/>
+                                <img src="./img/BIG_TIMMY_BURGER-lg.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -135,10 +135,10 @@
                         </a>
                     </div>
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/cookies.jpeg" class="img-responsive"/>
+                                <img src="./img/cookies.jpeg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -149,10 +149,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/how-to-grill-steak.jpg" class="img-responsive"/>
+                                <img src="./img/how-to-grill-steak.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -161,10 +161,10 @@
                         </a>
                     </div>
                     <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/sashimi-resized.jpg" class="img-responsive"/>
+                                <img src="./img/sashimi-resized.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">
@@ -173,10 +173,10 @@
                         </a>
                     </div>
                      <div class="col-md-4 recipe-item">
-                        <a href="recipes.php">
+                        <a href="recipe.php">
                             <div class="image">
                                 <div class="container-fluid">
-                                <img src="/~jmpham/img/sample2.jpg" class="img-responsive"/>
+                                <img src="./img/sample2.jpg" class="img-responsive"/>
                                 </div>
                             </div>
                             <div class="description">

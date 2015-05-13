@@ -54,7 +54,7 @@
             <h2>Dish</h2>
             <div id="image">
                 <div class="container-fluid">
-                <img src="/~jmpham/img/sample.jpg" class="img-responsive"/>
+                <img src="./img/sample.jpg" class="img-responsive"/>
                 </div>
             </div>
             <div id="ingredients">

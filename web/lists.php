@@ -1,3 +1,9 @@
+<?php
+    include realpath(dirname(__FILE__) . "/" . "../API/func.php");
+    $api = new databaseAPI;
+    session_start();
+    $uid = $_SESSION["uid"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,69 +57,63 @@
 
         <!-- Page Content -->
         <div id="lists" class="container-fluid">
-            <div id="grocery-list">
+            <div id="grocery">
                 <h2>Grocery List</h2><hr>
-                <ul class="sortable">
+                <ul class="sortable" id="grocery-list">
                     <?php 
-                        $grocery_list = array(
-                            'carrots' => array('text'=>'Carrots', 'quantity'=>'1', 'units'=>'sticks'),
-                            'milk' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'kale' => array('text'=>'Kale', 'quantity'=>'3', 'units'=>'bunches'),
-                            'a' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'b' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'c' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'd' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'e' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'f' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'g' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'h' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'i' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'j' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'k' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'l' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'm' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'n' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'o' => array('text'=>'Milk', 'quantity'=>'2', 'units'=>'gallons'),
-                            'p' => array('text'=>'Tea', 'quantity'=>'2', 'units'=>'boxes')
-                        );
+                        $grocery_list = json_decode($api->getGrocery($uid));
                         foreach ($grocery_list as $item) {
                             echo "<li class='ui-state-default item edit-item'>";
-                            echo "<label class='item-name'>{$item['text']}</label>";
-                            echo "<label class='item-quantity'>{$item['quantity']}</label>";
-                            echo "<label class='item-units'>{$item['units']}</label>";
+                            echo "<label class='item-name'>{$item[2]}</label>";
+                            echo "<label class='item-quantity'>{$item[0]}</label>";
+                            echo "<label class='item-units'>{$item[1]}</label>";
+
+                            echo "<div style='visibility:hidden;' class='btn-group edit'>";
+                            echo "<button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'>";
+                            echo "<span class='glyphicon glyphicon-pencil edit'></span></button>";
+                            echo "<ul class='dropdown-menu pull-right'>";
+                            echo "<li><a href='#' onclick='popup();'>Edit Item</a></li>";
+                            echo "<li><a href='removeIngredient.php?list=grocery&name=$item[2]&qty=$item[0]&units=$item[1]'>Delete Item</a></li>";
+                            echo "</ul></div>";
+
                             echo "</li>";
                         }
                     ?>
                 </ul>
-                 <form class="add">
+                 <form class="add" action="addToList.php" method="post">
                     <input class="col-xs-4 add-item" type="text" name="ingredient-name" placeholder="Ingredient Name">
                     <input class="col-xs-3 add-item" type="text" name="quantity" placeholder="Quantity">
                     <input class="col-xs-2 add-item" type="text" name="units" placeholder="Units">
-                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" name="submit1" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </div>
             <div id="inventory">
                 <h2>Inventory</h2><hr>
-                <ul class="sortable">
+                <ul class="sortable" id="inventory-list">
                     <?php 
-                        $inventory_list = array(
-                            'onions' => array('text'=>'Onions', 'quantity'=>'1', 'units'=>'units'),
-                            'garlic' => array('text'=>'Garlic', 'quantity'=>'2', 'units'=>'cloves ')
-                        );
+                        $inventory_list = json_decode($api->getInventory($uid));
                         foreach ($inventory_list as $item) {
                             echo "<li class='ui-state-default item edit-item'>";
-                            echo "<label class='item-name'>{$item['text']}</label>";
-                            echo "<label class='item-quantity'>{$item['quantity']}</label>";
-                            echo "<label class='item-units'>{$item['units']}</label>";
+                            echo "<label class='item-name'>{$item[2]}</label>";
+                            echo "<label class='item-quantity'>{$item[0]}</label>";
+                            echo "<label class='item-units'>{$item[1]}</label>";
+
+                            echo "<div style='visibility:hidden;' class='btn-group edit'>";
+                            echo "<button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'>";
+                            echo "<span class='glyphicon glyphicon-pencil edit'></span></button>";
+                            echo "<ul class='dropdown-menu pull-right'>";
+                            echo "<li><a href='#' onclick='popup();'>Edit Item</a></li>";
+                            echo "<li><a href='removeIngredient.php?list=inventory&name=$item[2]&qty=$item[0]&units=$item[1]'>Delete Item</a></li>";
+                            echo "</ul></div>";
                             echo "</li>";
                         }
                     ?>
                 </ul>
-                <form class="add">
+                <form class="add" action="addToList.php" method="post">
                     <input class="col-xs-4 add-item" type="text" name="ingredient-name" placeholder="Ingredient Name">
                     <input class="col-xs-3 add-item" type="text" name="quantity" placeholder="Quantity">
                     <input class="col-xs-2 add-item" type="text" name="units" placeholder="Units">
-                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" name="submit2" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </div>
             <div id="item-edit-popup">
@@ -154,6 +154,19 @@
     $(document).ready(function () {
       $('div#lists').find('ul.sortable').sortable({
         connectWith: 'ul.sortable',
+        remove: function(event,ui) {
+            var list1 = $( this ).attr('id');
+            var name = ui.item.find('.item-name');
+            var qty = ui.item.find('.item-quantity');     
+            var units = ui.item.find('.item-units');
+
+            $.ajax({
+              method: "POST",
+              url: "transferIngredient.php",
+              dataType: "json",
+              data: { list: list1, name: name[0].innerHTML, qty: qty[0].innerHTML, units: units[0].innerHTML}
+            });
+        },
         placeholder: 'sortable-placeholder',
         opacity: 0.7
         });
@@ -174,15 +187,19 @@
 
     $(".edit-item").hover(
       function() {
-        $( this ).append( $( "<div id='edit' class='btn-group'><button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-pencil edit'></span></button><ul class='dropdown-menu pull-right'><li><a href='#' onclick='popup();'>Edit Item</a></li><li><a href='#'>Delete Item</a></li></ul></div>" ) );
+        var edit_btn = $( this ).find(".edit");
+        for (var i=0; i < edit_btn.length; i++) {
+            edit_btn[i].style.visibility = "visible";
+        }
       }, function() {
-        $( this ).find( "#edit" ).remove();
+        var edit_btn = $( this ).find(".edit");
+        for (var i=0; i < edit_btn.length; i++) {
+            edit_btn[i].style.visibility = "hidden";
+        }
       }
     );
 
-    $(".edit-item").click(function(e) {
-        
-    });
+
 
     </script>
 
