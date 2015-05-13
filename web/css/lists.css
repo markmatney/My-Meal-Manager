@@ -10,7 +10,7 @@ ul {
 #wrapper {
 	overflow: hidden;
 }
-#grocery-list {
+#grocery {
 	float: left;
 	width: 50%;
 	overflow: scroll;
@@ -57,7 +57,7 @@ label {
 	margin-left: 10px;
 }
 .edit {
-	
+
 	padding: 5px;
 	float: right;
 }

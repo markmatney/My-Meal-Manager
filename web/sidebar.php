@@ -4,7 +4,7 @@
         'lists' => array('text'=>'My Lists', 'url'=>'lists.php'),
         'recipes' => array('text'=>'My Recipes', 'url'=>'my_recipes.php'),
         'explore' => array('text'=>'Explore', 'url'=>'explore.php'),
-        'logout' => array('text'=>'Log Out', 'url'=>'#'),
+        'logout' => array('text'=>'Log Out', 'url'=>'logout.php'),
     );
 
     function generateSideBar($menu, $user) {

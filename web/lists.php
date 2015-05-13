@@ -57,9 +57,9 @@
 
         <!-- Page Content -->
         <div id="lists" class="container-fluid">
-            <div id="grocery-list">
+            <div id="grocery">
                 <h2>Grocery List</h2><hr>
-                <ul class="sortable">
+                <ul class="sortable" id="grocery-list">
                     <?php 
                         $grocery_list = json_decode($api->getGrocery($uid));
                         foreach ($grocery_list as $item) {
@@ -89,7 +89,7 @@
             </div>
             <div id="inventory">
                 <h2>Inventory</h2><hr>
-                <ul class="sortable">
+                <ul class="sortable" id="inventory-list">
                     <?php 
                         $inventory_list = json_decode($api->getInventory($uid));
                         foreach ($inventory_list as $item) {
@@ -154,6 +154,19 @@
     $(document).ready(function () {
       $('div#lists').find('ul.sortable').sortable({
         connectWith: 'ul.sortable',
+        remove: function(event,ui) {
+            var list1 = $( this ).attr('id');
+            var name = ui.item.find('.item-name');
+            var qty = ui.item.find('.item-quantity');     
+            var units = ui.item.find('.item-units');
+
+            $.ajax({
+              method: "POST",
+              url: "transferIngredient.php",
+              dataType: "json",
+              data: { list: list1, name: name[0].innerHTML, qty: qty[0].innerHTML, units: units[0].innerHTML}
+            });
+        },
         placeholder: 'sortable-placeholder',
         opacity: 0.7
         });
@@ -186,9 +199,7 @@
       }
     );
 
-    $(".edit-item").click(function(e) {
-        
-    });
+
 
     </script>
 
