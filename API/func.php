@@ -368,5 +368,26 @@ class databaseAPI {
 		     }	
 		}
 	}
+	/*searchRecipes 
+
+	Returns all recipe names that use all input ingredients, 
+	sorted by number of ingreds the recipe requires that aren't in 
+	the given user's inventory or grocery list
+
+	Input format: (int userid, String[] ingredients) 
+	Ouput format: 
+	<RecipeName1><br>
+	<RecipeName2><br> ...
+
+	*/
+	function searchRecipes(...$input){
+		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '; 
+       		 foreach $input as $i{
+			$execstring .= $i;
+			$execstring .= ' ';
+		}
+		$output = shell_exec($execstring);
+		echo $output;
+	}
 }
 ?>
