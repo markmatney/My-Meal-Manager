@@ -105,7 +105,7 @@ public class RecipeSearcher{
 		catch (SQLException ex){System.out.println(ex);}
 		return null;
 	}
-	public static Recipe[] sortByMissingIngred(Recipe[] recipes){
+	public static Recipe[] sortByMissingIngred(int userid, Recipe[] recipes){
 		int recipesLen = recipes.length;
 		Connection conn;
 		//create connection to database
@@ -113,7 +113,7 @@ public class RecipeSearcher{
                      conn = DbManager.getConnection(true);
 			for (int i = 0; i < recipesLen; i++){
 				ResultSet rs = 
-				conn.createStatement().executeQuery("SELECT COUNT(*) AS numMissing FROM Ingredients i WHERE i.Recipe=" + recipes[i].getRecipeId() + " AND i.IngredientName NOT IN (SELECT Inventory.IngredientName FROM Inventory) AND i.IngredientName NOT IN (SELECT GroceryList.IngredientName FROM GroceryList)");
+				conn.createStatement().executeQuery("SELECT COUNT(*) AS numMissing FROM Ingredients i WHERE i.Recipe=" + recipes[i].getRecipeId() + " AND i.IngredientName NOT IN (SELECT Inventory.IngredientName FROM Inventory WHERE UserID=" + userid + ") AND i.IngredientName NOT IN (SELECT GroceryList.IngredientName FROM GroceryList WHERE UserID=" + userid + ")");
 				if (rs != null && rs.next())
                                     recipes[i].setMissingIngreds(rs.getInt("numMissing"));
 			}
@@ -122,10 +122,10 @@ public class RecipeSearcher{
 		Arrays.sort(recipes);
 		return recipes;
 	}
-	public static Recipe[] executeSearch(Ingredient[] ingredients){
+	public static Recipe[] executeSearch(int userid, Ingredient[] ingredients){
 		ArrayList<Integer> rids = getRids(ingredients);
 		Recipe[] recipes = getMatchingRecipes(rids);
-		return sortByMissingIngred(recipes);
+		return sortByMissingIngred(userid, recipes);
 	}
 
 }
