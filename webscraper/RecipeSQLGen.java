@@ -9,12 +9,13 @@
  *
  * Usage:
  *   1) compile: bash$> javac RecipeSQLGen.java
- *   2) run:     bash$> java Main recipes
+ *   2) run:     bash$> java Main recipes database nextrecipeid
  * 
  * Input:
  *   1) recipes: a text file containing a variable-length list of
  *      '\n'-delimited recipe names. The file must end with an empty line!
- *   2) other options......
+ *   2) database: name of the database to use
+ *   3) nextrecipeid: the **next** recipe id to use in the auto-increment field in Recipes
  *
  * Output: prints to stdout a SQL query that inserts recipe information into a
  *         database. The output can then be redirected to a file with >, or piped to
@@ -38,12 +39,23 @@ class Main
     int i, n, listsize = 0, garbageflag = 0;
     char c;
 
-    String query = "", subquery, recipe = "";
+    String query = "USE " + argv[1] + ";\n\n", subquery, recipe = "";
     ArrayList<String> recipes = new ArrayList<String>();    
     FileInputStream f;
+    int recipeid;
+    if (argv.length == 3)
+    {
+      recipeid = Integer.valueOf(argv[2]);
+    }
+    else
+    {
+      recipeid = 1;
+    }
 
     // Parse the file given by argv[0], and store in ArrayList recipes.
     try {
+      // parse recipes file
+
       f = new FileInputStream(argv[0]);
       while ((i = f.read()) != -1)
       {
@@ -85,78 +97,92 @@ class Main
       recipe = it.next();
 
       AllRecipesRecipe arr = new AllRecipesRecipe(recipe);
-      subquery = arr.generateQuery();
+      subquery = arr.generateQuery(recipeid);
+      recipeid++;
       query += subquery + "\n\n";
     }
 
-    System.out.println("** in main: \n" + query);
+    System.out.println(query);
   }
 }
 
 abstract class Recipe
 {
   // members
+  protected String searchedname;
   protected String name;
   protected String url;
-  // image??
-  //
-  protected Document dom;
+  protected String image;
   protected String time;
   protected ArrayList<Ingredient> ingredients;
   protected ArrayList<String> instructions;
+  protected Document dom;
 
   // functions
 
   public Recipe(String n)
   {
-    name = n;
+    searchedname = n;
   }
 
-  public String toString()
+  // converts INSTRUCTIONS TO STRING!!
+  public String instructionsToString()
   {  
-    String ret = "Recipe:\n\turl: " + url + "\n\tingreds: " + ingredients.toString() + "\n\tinsns: \n";
+    String ret = "";//"Recipe:\n\turl: " + url + "\n\tingreds: " + ingredients.toString() + "\n\tinsns: \n";
     Iterator<String> it = instructions.iterator();
     int i = 0;
     while (it.hasNext())
     {
-      ret += "\t\t" + i + ": " + it.next() + "\n";
+      ret += it.next() + " ";
       i++;
     }
     return ret;
   }
 
-  final String generateQuery() throws IOException, Exception
+  final String generateQuery(int id) throws IOException, Exception
   {
     try {
       createDOM();
       parseDOM();
-      return convertDataToQuery();
+      return convertDataToQuery(id);
     }
     catch (Exception e) { // cannot generate recipe for some reason (no search results, etc.)
+      // System.out.println(name + e);
       return "";
     }
   }
 
   abstract void createDOM() throws IOException;
+  abstract void getName();
+  abstract void getImage();
+  abstract void getTime();
   abstract void getIngredients();
   abstract void getInstructions();
-  abstract void getTime();
 
   final void parseDOM()
   {
+    getName();
+    getImage();
+    getTime();
     getIngredients();
     getInstructions();
-    getTime();
   }
 
-  final String convertDataToQuery()
+  final String convertDataToQuery(int id)
   {
-    // fucked up part
-    String id = "6", time = "40";
+    //String result = new StringBuilder(1024).append("INSERT INTO Recipes VALUES (").append(id).append(",").append(name+",othershit)").toString();
+    //String result = new StringBuilder(1024).append("INSERT INTO Recipes VALUES (").append(id).append(",").append(name).append(","+url).toString();
 
-    // not sure why java is concatenating these incorrectly
-    System.out.println("** in method: Recipe.convertDataToQuery() **");
-    return "INSERT INTO Recipes VALUES (" + id + "," + name + ",'" + url + "')";
+    // store the entire query (recipe table insert + ingredient table insert) in string
+    String query = "INSERT INTO Recipes (RecipeName, URL, Image, TotalCookingTime, Instructions) VALUES (\n\t'" + name + "',\n\t'" + url + "',\n\t'" + image + "',\n\t'" + time + "',\n\t'" + this.instructionsToString() + "'\n);\n";
+    // iterate over ingredients and append to query
+    Iterator<Ingredient> it = ingredients.iterator();
+    while (it.hasNext())
+    {
+      Ingredient i = it.next();
+      query += "INSERT INTO Ingredients VALUES (\n\t" + id + ",\n\t'" + i.name() + "',\n\t" + i.qty() + ",\n\t'" + i.units() + "'\n);\n";
+    }
+    return query + "\n";
   }
 }
 
@@ -169,9 +195,10 @@ class AllRecipesRecipe extends Recipe
 
   public void createDOM() throws IOException
   {  
-    String searchurl = "http://allrecipes.com/search/default.aspx?wt=" + name.replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\n", "");
+    String searchurl = "http://allrecipes.com/search/default.aspx?wt=" + searchedname.replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\n", "");
 
     Document doc1 = Jsoup.connect(searchurl).get(); // Java representation of DOM that our class methods will parse
+
     Elements links = doc1.select("a.title");
     String recipeurl = "";
     for (Element link : links)
@@ -182,18 +209,75 @@ class AllRecipesRecipe extends Recipe
       recipeurl = link.attr("abs:href");
     }
     url = recipeurl; 
-    System.out.println(url);
+    // System.out.println(url);
     dom = Jsoup.connect(recipeurl).get(); // Java representation of DOM that our class methods will parse
+
+  }
+  public void getName()
+  {
+    name = dom.select("#itemTitle").html();
+  }
+
+  public void getImage()
+  {
+    // get image
+    String imgurl = dom.select("img#imgPhoto").attr("src");
+    // TODO: replace with storing binary image file instead
+    image = imgurl;
+  }
+
+  public void getTime()
+  {
+    String t = "";
+    String[] timetitle = dom.select("#pnlReadyInTime").attr("title").split(" ");
+
+    int i = 0;
+    while (i < timetitle.length)
+    {
+      // check for index out of bounds
+      if (timetitle[i].toLowerCase().compareTo("hour") == 0 || timetitle[i].toLowerCase().compareTo("hours") == 0)
+      {
+        if (timetitle[i-1].length() == 1)
+        {
+          t += "0";
+        }
+        t += timetitle[i-1] + ":";
+        break;
+      }
+      i++;
+    }
+    if (t.length() == 0)
+    {
+      t += "00:";
+      i = 0;
+    }
+
+    while (i < timetitle.length)
+    {
+      // check for index out of bounds
+      if (timetitle[i].toLowerCase().compareTo("minute") == 0 || timetitle[i].toLowerCase().compareTo("minutes") == 0)
+      {
+        if (timetitle[i-1].length() == 1)
+        {
+          t += "0";
+        }
+        t += timetitle[i-1] + ":00";
+        break;
+      }
+      i++;
+    }
+    if (t.length() == 3)
+    {
+      t += "00:00";
+    }
+    time = t;    
   }
 
   public void getIngredients()
   {
     Ingredient i;
-
-    // TODO: write a regex to extract site name from url.
-    // e.g. http://allrecipes.com/recipe/mouses-macaroni-and-cheese/ -> allrecipes.com
-
-    String n, q, u, amt, site = "some regex";
+    String n, qs, u, amt;
+    Float qf;
     ArrayList<Ingredient> is = new ArrayList<Ingredient>();
 
       // In the allrecipes recipe pages, the ingredients are located inside <p class="fl-ing">
@@ -209,39 +293,64 @@ class AllRecipesRecipe extends Recipe
       // All characters that are not letters (i.e., digits, spaces, and /) belong to quantity
       // e.g. "1 1/4"
       int j;
-      for (j = 0; j < amt.length() && !Character.isLetter(amt.charAt(j)); j++) {}
+      for (j = 0; j < amt.length() && !Character.isLetter(amt.charAt(j)); j++)
+      {
+        if (amt.charAt(j) == '(')
+        {
+          while (amt.charAt(j) != ')')
+          {
+            j++;
+          }
+        }
+      }
  
       // TODO: if there is something in parenthesis, that is the units! FIX
 
       // TODO: does this ever happen when amt.length() != 0 ?
-      if (j == 0) // e.g. "salt and pepper to taste"
+      // System.out.println("**: " + j);
+      if (j == 0) // the first character of amt is a letter, e.g. "salt and pepper to taste"
       {
-        q = ""; // should do something better than this eventually
-        u = "";
+        qs = "";
+        qf = new Float(0); // should do something better than this eventually
+        u = "unit";
       }
-      else
+      else if (j != amt.length()) // there are units, e.g. "5 tablespoons" or "1 cup"
       {
-        if (j != amt.length()) // there are units
+        j--;
+        if (amt.contains("("))
         {
-          j--;  
-          q = amt.substring(0, j);
+          qs = amt.substring(0, amt.indexOf('(') - 1);
+        }
+        else
+        {
+          qs = amt.substring(0, j);
+        }
+        qf = IngredientAmount.toFloat(qs);
  
-          // Remaining characters represent belong to units, e.g. "tablespoon"
-          u = amt.substring(j + 1);
+        // Remaining characters represent belong to units, e.g. "tablespoon"
+        u = amt.substring(j + 1);
 
-          // singularize units (remove 's' from the end)
-          if (u.length() > 0 && u.charAt(u.length() - 1) == 's')
-          {
-            u = u.substring(0, u.length() - 1);
-          }
-        }
-        else // no units
+        // singularize units (remove 's' from the end)
+        if (u.length() > 0 && u.charAt(u.length() - 1) == 's')
         {
-          q = amt;
-          u = "";
+          u = u.substring(0, u.length() - 1);
         }
       }
-      i = new Ingredient(n, q, u);
+      else // no units, e.g. "1 onion"
+      {
+        if (amt.contains("("))
+        {
+          qs = amt.substring(0, amt.indexOf('(') - 1);
+        }
+        else
+        {
+          qs = amt;
+        }
+        qf = IngredientAmount.toFloat(qs);
+        u = "unit";
+      }
+
+      i = new Ingredient(n, qs, qf, u);
       is.add(i);
     }
     ingredients = is;
@@ -263,10 +372,6 @@ class AllRecipesRecipe extends Recipe
     instructions = insns;
   }
 
-  public void getTime()
-  {
-    // set time to the total cook time (in minutes)
-  }
 }
 
 class Ingredient
@@ -274,12 +379,12 @@ class Ingredient
   public String name;
   public String quantity; // for display only
 
-  // public Number qty
+  public Float qty;
   // ** use numerical representation to do reduction calculations
 
   public String units;
 
-  public Ingredient(String n, String q, String u)
+  public Ingredient(String n, String qs, Float qf, String u)
   {
     name = n;
 
@@ -290,12 +395,62 @@ class Ingredient
     // 2 -> 2.0
     // However, may still want to store the string version for easy display
     // (1/3 looks better than 0.33)
-    quantity = q;
+    quantity = qs;
+    qty = qf;
     units = u;
   }
 
-  public String toString()
+  public String name()
   {
-    return quantity + ":" + units + ":" + name;
+    return name;
+  }
+
+  public String quantity()
+  {
+    return quantity;
+  }
+
+  public String qty()
+  {
+    if (qty == 0)
+      return "NULL";
+    else
+      return qty.toString();
+  }
+
+  public String units()
+  {
+    return units;
+  }
+}
+
+class IngredientAmount
+{
+  public static Float toFloat(String str)
+  {
+    int i;
+
+    // remove parenthesized crap
+    
+    if (str.contains("(") && str.contains(")"))
+    {
+      i = str.indexOf('(');
+      return toFloat(str.substring(0, i-1));
+    }
+    else if (str.contains(" "))
+    {
+      i = str.indexOf(' ');
+      return toFloat(str.substring(0, i)) + toFloat(str.substring(i+1, str.length()));
+    }
+    else if (str.contains("/"))
+    {
+      i = str.indexOf('/');
+      return toFloat(str.substring(0, i)) / toFloat(str.substring(i+1, str.length()));
+    }
+    else
+    {
+      // return floating point value of string that contains an int
+      return Float.parseFloat(str);
+    }
   }
 }
