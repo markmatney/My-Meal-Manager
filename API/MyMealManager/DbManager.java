@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class DbManager {
         static private String databaseURL = "jdbc:mysql://localhost:3306/";
-        static private String dbname = "CS143";
-        static private String username = "cs143";
-        static private String password = "";
+        static private String dbname = "CS130";
+        static private String username = "cs130";
+        static private String password = "test";
 	
 	public static Connection getConnection(boolean readOnly)
 	throws SQLException {        

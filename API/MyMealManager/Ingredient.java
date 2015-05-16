@@ -6,7 +6,7 @@ import java.io.*;
 public class Ingredient{
 	private String ingredName;
 	private int recipeId = -1;  //placeholder - val if hasn't been set
-	private int quantity = -1;  //ditto
+	private float quantity = -1;  //ditto
 	private String units;
 	public Ingredient(String ingredName){ //for basic recipe searching
 		this.ingredName = ingredName;
@@ -19,7 +19,7 @@ public class Ingredient{
 	}
 	//can set everything except ingredName after creation. name should 
 	//stay the same
-	public void setQuantity(int quantity){
+	public void setQuantity(float quantity){
 		this.quantity = quantity;
 	}
 	public void setUnits(String units){
@@ -34,7 +34,7 @@ public class Ingredient{
 	public int getRecipeId(){
 		return recipeId;
 	}
-	public int getQuantity(){
+	public float getQuantity(){
 		return quantity;
 	}
 	public String getUnits(){

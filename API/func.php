@@ -52,7 +52,7 @@ class databaseAPI {
               $count = @mysql_query("SELECT COUNT(*) as count FROM UserUNandID  WHERE ('$name' = UserName)");
 		  $countdata = mysql_fetch_assoc($count);
 		  if($countdata['count'] >= 1){
-		         print "User already exsists!";
+		         print "User already exists!";
                exit(1);
 				}
           else
@@ -391,3 +391,4 @@ class databaseAPI {
 	}
 }
 ?>
+

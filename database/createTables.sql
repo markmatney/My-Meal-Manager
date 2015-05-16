@@ -3,7 +3,7 @@ CREATE TABLE Recipes(
 	RecipeID INT NOT NULL AUTO_INCREMENT,
 	RecipeName VARCHAR(100) NOT NULL,
 	URL VARCHAR(512) NOT NULL,
-	Image LONGBLOB,
+	Image VARCHAR(512) NOT NULL,
 	TotalCookingTime TIME,
 	Instructions VARCHAR(1000),
 	PRIMARY KEY(RecipeID)
@@ -12,7 +12,7 @@ CREATE TABLE Recipes(
 CREATE TABLE Ingredients(
 	Recipe INT NOT NULL,
 	IngredientName VARCHAR(100) NOT NULL,
-	Quantity INT,
+	Quantity FLOAT,
 	Units VARCHAR(100),
 	FOREIGN KEY(Recipe) REFERENCES Recipes(RecipeID)
 );
@@ -35,7 +35,7 @@ CREATE TABLE UserRecipes(
 CREATE TABLE Inventory(
 	UserID INT NOT NULL,
 	IngredientName VARCHAR(100) NOT NULL,
-	Quantity INT,
+	Quantity FLOAT,
 	Units VARCHAR(100),
 	FOREIGN KEY(UserID) REFERENCES UserUNandID(UserID)
 );
@@ -43,7 +43,7 @@ CREATE TABLE Inventory(
 CREATE TABLE GroceryList(
 	UserID INT NOT NULL,
 	IngredientName VARCHAR(100) NOT NULL,
-	Quantity INT,
+	Quantity FLOAT,
 	Units VARCHAR(100),
 	FOREIGN KEY(UserID) REFERENCES UserUNandID(UserID)
 );
