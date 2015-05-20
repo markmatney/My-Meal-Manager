@@ -24,7 +24,18 @@ Set Up Database:
 Download MySql and make sure that MySql server is running
 Create a database called CS130.
 As the root user, create a user "cs130" with password "test" and grant the new user with all privileges. This allows the files to access and modify the database.
-Build the table schema with the createTables.sql script in the "database" folder, and now your database is complete!
+Build the table schema with the createTables.sql script in the "database" folder.
+
+To initialize it with recipe data, compile and run the web scraper code in the "webscraper" folder:
+
+$ cd webscraper
+$ javac RecipeSQLGen.java
+$ java Main recipes CS130 | mysql -h localhost -u cs130 -ptest
+
+And now your database is complete!
+
+
 
 To access the website, replace "user" with your system username
 URL: http://localhost/~user/web/ 
+
