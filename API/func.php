@@ -11,9 +11,9 @@ class databaseAPI {
     /* Constructor - open db_connection */
     function __construct(){
 	      $host = "localhost";
-	      $user = "cs143";
-		  $pw = "";
-		  $db = "CS143";
+	      $user = "cs130";
+		  $pw = "test";
+		  $db = "CS130";
          $this->db_connection = mysql_connect($host, $user,$pw);
          mysql_select_db($db, $this->db_connection);
          if(!$this->db_connection)
@@ -527,5 +527,3 @@ class databaseAPI {
 	}
 }
 ?>
-
-
