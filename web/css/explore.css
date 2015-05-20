@@ -48,8 +48,39 @@ a, a:hover{
 .recipe-item {
 
 }
+#recipe_popup {
+    background-color: white;
+    border-radius: 5px;
+}
 .recipe-item img{
     max-height: 200px;
     margin-right: auto;
     margin-left: auto; 
+}
+.popup_open {
+    background-color: transparent;
+    border: none;
+}
+
+#image {
+    width: 40%;
+    float: left;
+    padding: 30px;
+}
+#ingredients {
+    width: 60%;
+    float: left;
+    padding: 30px;
+}
+#instr {
+    clear: both;
+}
+h2 {
+    text-align: center;
+}
+button {
+    float: right;
+}
+label {
+    margin-left: 10px;
 }

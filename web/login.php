@@ -12,7 +12,7 @@
 			$_SESSION["uid"] = $api->getUserID($name);
 			header("Location: lists.php");
 	 	} else {
-			header("Location: index.php");
+			die(header("location:index.php?loginFailed=true"));
 	 	}
 	}
 ?>

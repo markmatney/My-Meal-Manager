@@ -73,7 +73,7 @@
             <div id="grid">
                 <div class="row">
                     <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
+                        <button class="popup_open" onclick="open_popup(this);">
                             <div class="image">
                                 <div class="container-fluid">
                                 <img src="./img/0149359_Making-Taco_s4x3.jpg" class="img-responsive"/>
@@ -82,7 +82,7 @@
                             <div class="description">
                                 <h2>Dish</h2>
                             </div>
-                        </a>
+                        </button>
                     </div>
                      <div class="col-md-4 recipe-item">
                         <a href="recipe.php">
@@ -186,6 +186,8 @@
                     </div>
                 </div>
             </div>
+            <div id="recipe_popup">
+            </div>
         </div>
         <!-- end PageContent -->
     </div>
@@ -197,12 +199,34 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
-    <!-- Menu Toggle Script -->
+    <!-- Include jQuery Popup JS -->
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/jquery.popupoverlay.js"></script>
+
     <script>
+        $(document).ready(function() {
+            // Initialize the plugin
+            $('#my_popup').popup();
+        });
+        function open_popup(element) {
+            var recipe_name = element.getElementsByTagName("h2")[0].innerHTML;
 
+            $.ajax({
+              method: "POST",
+              url: "recipe.php",
+              dataType: "html",
+              data: { recipe_name: recipe_name },
+              success: function (html) {
+                $('#recipe_popup').append(html);
+                $('#recipe_popup').popup('show');
+              }
+            });
+        }
+        function close_popup() {
+            $("#recipe_template").remove();
+            $('#recipe_popup').popup('hide');
+        }
     </script>
-
-
 
 </body>
 
