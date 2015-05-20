@@ -516,9 +516,10 @@ class databaseAPI {
 
 	*/
 	
-	function searchRecipes($input){
-		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '; 
-       		 foreach ($input as $i){
+	function searchRecipes($userid, $ingreds){
+		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '. $userid . ' ';
+		 
+       		 foreach ($ingreds as $i){
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
@@ -527,3 +528,8 @@ class databaseAPI {
 	}
 }
 ?>
+
+
+
+
+
