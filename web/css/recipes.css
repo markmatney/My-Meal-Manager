@@ -16,6 +16,17 @@ a, a:hover{
 #recipe_popup {
     background-color: white;
     border-radius: 5px;
+    width: 70%;
+    padding: 15px;
+    height: 70%;
+    overflow: scroll;
+}
+#close_popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+    border: none;
 }
 .recipe-item img{
     max-height: 200px;
@@ -56,4 +67,32 @@ label {
 }
 #add_content > button {
     border-radius: 45px;
+}
+#add_recipe_popup {
+    background-color: white;
+    width: 50%;
+    padding: 15px;
+}
+#add_recipe_popup {
+    height: 70%;
+    overflow: scroll;
+}
+.btn.no-outline {
+    background-color: transparent;
+}
+.btn-primary.no-outline {
+    float: right;
+    color: #8BABD6;
+    border: none;
+}
+.btn-primary.no-outline:hover, .btn-primary.no-outline:focus, .btn-primary.no-outline:active, .btn-primary.no-outline.active, .open > .dropdown-toggle.btn-primary {
+    float: right;
+    color: #33a6cc;
+    border: none;
+}
+.btn-primary.no-outline:active, .btn-primary.no-outline.active {
+    float: right;
+    color: #007299;
+    box-shadow: none;
+    border: none;
 }

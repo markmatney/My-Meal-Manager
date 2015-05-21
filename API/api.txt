@@ -126,6 +126,12 @@
 	*/
 	function addRecipeToGrocery($recipe, $userid)
 /////////////////////////////////////////////////////////////////////////
+	/* getAllRecipes
+	
+	Returns a json array of all recipe names
+	*/
+	function getAllRecipes()
+/////////////////////////////////////////////////////////////////////////
 	/*searchRecipes
 
 	Takes as input a UserID and a list of ingredients. Returns list of 

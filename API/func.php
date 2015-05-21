@@ -503,6 +503,25 @@ class databaseAPI {
 		     }	
 		}
 	}
+
+	/* getAllRecipes
+	
+	Returns a json array of all recipe names
+	*/
+	function getAllRecipes(){
+	   $list = @mysql_query("SELECT * FROM Recipes");
+	  $array = array();
+		$i = 0;
+	  while($row = @mysql_fetch_assoc($list)) 
+	   {   
+		   $recipeid = $row['RecipeID'];
+		   $recipename = mysql_fetch_assoc(@mysql_query("SELECT RecipeName FROM Recipes WHERE '$recipeid' = RecipeID"));
+		   $name =  $recipename['RecipeName'] ;	
+		   $array[$i] = $name ;
+		   	$i = $i+1;
+	   }
+	   return json_encode($array);
+	}
 	/*searchRecipes 
 
 	Returns all recipe names that use all input ingredients, 
@@ -519,10 +538,11 @@ class databaseAPI {
 	function searchRecipes($userid, $ingreds){
 		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '. $userid . ' ';
 		 
-       		 foreach ($ingreds as $i){
+       	foreach ($ingreds as $i){
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
+		echo $execstring;
 		$output = shell_exec($execstring);
 		echo $output;
 	}

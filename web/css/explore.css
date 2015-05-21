@@ -16,6 +16,17 @@ a, a:hover{
 #recipe_popup {
     background-color: white;
     border-radius: 5px;
+    width: 70%;
+    padding: 15px;
+    height: 70%;
+    overflow: scroll;
+}
+#close_popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+    border: none;
 }
 .recipe-item img{
     max-height: 200px;

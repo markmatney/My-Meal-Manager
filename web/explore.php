@@ -66,22 +66,24 @@
         <!-- Page Content -->
         <div id="grid" class="container-fluid">
             <?php 
-                if (isset($_GET["submit"])) {
-                    $keywords = $_GET['search'];
+                /*if (isset($_GET["submit"])) {
+                    $keywords = explode(" ", $_GET['search']);
                 } else {
                     $keywords = [];
                 }
-                $recipe_list = $api->searchRecipes($keywords);
+
+                $recipe_list = $api->searchRecipes($uid, $keywords);*/
+                $recipe_list = json_decode($api->getAllRecipes());
                 $max = sizeof($recipe_list);
                 if ($max != 0) {
                     $i = 0;
-                    while (($i <= $max) && ($i <= 9)) {
+                    while (($i < $max) && ($i < 9)) {
                         $recipe = json_decode($api->getRecipe($recipe_list[$i]));
                         echo '<div class="col-md-4 recipe-item">';
                         echo '<button class="popup_open" onclick="open_popup(this);">';
                         echo '<div class="image">';
                         echo '<div class="container-fluid">';
-                        echo '<img src="'.$recipe_list[2].'" class="img-responsive"/>';
+                        echo '<img src="'.$recipe[2].'" class="img-responsive"/>';
                         echo '</div></div>';
                         echo '<div class="description">';
                         echo '<h2>'.$recipe[0].'</h2>';
@@ -90,8 +92,8 @@
                     }
                 } else {
                     echo '<div class="alert alert-danger" role="alert">';
-                    echo "No recipes found. Please try a different search.";
-                    echo "</div>";
+                    echo "There are no recipes bookmarked. Please add a recipe or explore some recipes.";
+                    echo '</div>';
                 }
             ?>
             <div id="recipe_popup">
@@ -120,11 +122,12 @@
             var recipe_name = element.getElementsByTagName("h2")[0].innerHTML;
 
             $.ajax({
-              method: "POST",
+              method: "GET",
               url: "recipe.php",
               dataType: "html",
-              data: { recipe_name: recipe_name },
+              data: { recipe_name: recipe_name, root_page: 'explore' },
               success: function (html) {
+                $('#recipe_popup').empty();
                 $('#recipe_popup').append(html);
                 $('#recipe_popup').popup('show');
               }
