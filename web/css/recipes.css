@@ -1,0 +1,59 @@
+#bookmarked {
+    padding-top: 70px;
+    padding-left: 30px;
+    z-index: -1;
+}
+.description {
+    text-align: center;
+}
+a, a:hover{
+    text-decoration: none;
+    color: black;
+}
+.recipe-item {
+
+}
+#recipe_popup {
+    background-color: white;
+    border-radius: 5px;
+}
+.recipe-item img{
+    max-height: 200px;
+    margin-right: auto;
+    margin-left: auto; 
+}
+.popup_open {
+    background-color: transparent;
+    border: none;
+}
+
+#image {
+    width: 40%;
+    float: left;
+    padding: 30px;
+}
+#ingredients {
+    width: 60%;
+    float: left;
+    padding: 30px;
+}
+#instr {
+    clear: both;
+}
+h2 {
+    text-align: center;
+}
+button {
+    float: right;
+}
+label {
+    margin-left: 10px;
+}
+#add_content {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+#add_content > button {
+    border-radius: 45px;
+}

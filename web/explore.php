@@ -1,3 +1,9 @@
+<?php
+    include realpath(dirname(__FILE__) . "/" . "../API/func.php");
+    $api = new databaseAPI;
+    session_start();
+    $uid = $_SESSION["uid"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,156 +42,58 @@
         </div>
         <!-- end Sidebar -->
         <!-- Navbar -->
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
-                <?php include 'navbar.php'; 
-                    $navbar = array(
-                        'add' => array('text'=>'Add Ingredient', 'url'=>'#'),
-                        'remove' => array('text'=>'Remove All', 'url'=>'#')
-                    );
-                    generateNavBar($navbar, 'My Lists');
-                ?>
+                <div class="navbar-header">';
+                    <a href='#' class='navbar-brand'>Explore Page</a>
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <div class="col-sm-3 col-md-3 pull-right">
+                    <form class="navbar-form" role="search" action=<?php echo $_SERVER['PHP_SELF'] ?> method="GET">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search" name="search" id="search">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" name="submit" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
             </div>
         </nav>
         <!-- end Navbar -->
 
         <!-- Page Content -->
-        <div id="lists" class="container-fluid">
-
-                <nav class="navbar navbar-default navbar-lower" role="navigation">
-                  <div class="container">
-                    <div class="collapse navbar-collapse collapse-buttons">
-                      <form class="navbar-form" role="search">
-                            <div id="custom-search-input">
-                                <div class="input-group col-md-12">
-                                    <input type="text" class="  search-query form-control" placeholder="Search" />
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-danger" type="button">
-                                            <span class=" glyphicon glyphicon-search"></span>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                      </form>
-                    </div>
-                  </div>
-                </nav>
-            <div id="grid">
-                <div class="row">
-                    <div class="col-md-4 recipe-item">
-                        <button class="popup_open" onclick="open_popup(this);">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/0149359_Making-Taco_s4x3.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </button>
-                    </div>
-                     <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/ramen.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/sample.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/pinwheel-cookies-ck-1941056-x.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/BIG_TIMMY_BURGER-lg.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/cookies.jpeg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/how-to-grill-steak.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/sashimi-resized.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                     <div class="col-md-4 recipe-item">
-                        <a href="recipe.php">
-                            <div class="image">
-                                <div class="container-fluid">
-                                <img src="./img/sample2.jpg" class="img-responsive"/>
-                                </div>
-                            </div>
-                            <div class="description">
-                                <h2>Dish</h2>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div id="grid" class="container-fluid">
+            <?php 
+                if (isset($_GET["submit"])) {
+                    $keywords = $_GET['search'];
+                } else {
+                    $keywords = [];
+                }
+                $recipe_list = $api->searchRecipes($keywords);
+                $max = sizeof($recipe_list);
+                if ($max != 0) {
+                    $i = 0;
+                    while (($i <= $max) && ($i <= 9)) {
+                        $recipe = json_decode($api->getRecipe($recipe_list[$i]));
+                        echo '<div class="col-md-4 recipe-item">';
+                        echo '<button class="popup_open" onclick="open_popup(this);">';
+                        echo '<div class="image">';
+                        echo '<div class="container-fluid">';
+                        echo '<img src="'.$recipe_list[2].'" class="img-responsive"/>';
+                        echo '</div></div>';
+                        echo '<div class="description">';
+                        echo '<h2>'.$recipe[0].'</h2>';
+                        echo '</div></button></div>';
+                        $i++;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">';
+                    echo "No recipes found. Please try a different search.";
+                    echo "</div>";
+                }
+            ?>
             <div id="recipe_popup">
             </div>
         </div>

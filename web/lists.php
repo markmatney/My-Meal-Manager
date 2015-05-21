@@ -42,15 +42,11 @@
         </div>
         <!-- end Sidebar -->
         <!-- Navbar -->
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
-                <?php include 'navbar.php'; 
-                    $navbar = array(
-                        'add' => array('text'=>'Add Ingredient', 'url'=>'#'),
-                        'remove' => array('text'=>'Remove All', 'url'=>'#')
-                    );
-                    generateNavBar($navbar, 'My Lists');
-                ?>
+                <div class="navbar-header">';
+                    <a href='#' class='navbar-brand'>My Lists</a>
+                </div>
             </div>
         </nav>
         <!-- end Navbar -->
@@ -72,7 +68,7 @@
                             echo "<button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'>";
                             echo "<span class='glyphicon glyphicon-pencil edit'></span></button>";
                             echo "<ul class='dropdown-menu pull-right'>";
-                            echo "<li><a href='#' onclick='popup();'>Edit Item</a></li>";
+                            echo "<li><a href='#' class='grocery-item' id='{$item[2]}' onclick='popup(this.className, this.id);'>Edit Item</a></li>";
                             echo "<li><a href='removeIngredient.php?list=grocery&name=$item[2]&qty=$item[0]&units=$item[1]'>Delete Item</a></li>";
                             echo "</ul></div>";
 
@@ -102,7 +98,7 @@
                             echo "<button type='button' class='edit-btn dropdown-toggle' data-toggle='dropdown'>";
                             echo "<span class='glyphicon glyphicon-pencil edit'></span></button>";
                             echo "<ul class='dropdown-menu pull-right'>";
-                            echo "<li><a href='#' onclick='popup();'>Edit Item</a></li>";
+                            echo "<li><a href='#' class='inventory-item' id='$item[2]' onclick='popup(this.className, this.id);'>Edit Item</a></li>";
                             echo "<li><a href='removeIngredient.php?list=inventory&name=$item[2]&qty=$item[0]&units=$item[1]'>Delete Item</a></li>";
                             echo "</ul></div>";
                             echo "</li>";
@@ -117,20 +113,22 @@
                 </form>
             </div>
             <div id="item-edit-popup">
-                <form>
+                <form action="editIngredient.php"method="POST">
                     <div class="form-group">
                         <label for="ingredient-name">Ingredient Name</label>
-                        <input type="text" class="form-control" id="ingredient-name" placeholder="Enter Ingredient Name">
+                        <input type="text" class="form-control" name="ingredient-name" id="ingredient-name" placeholder="Enter Ingredient Name">
                     </div>
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
-                        <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity">
+                        <input type="text" class="form-control" name="quantity" id="quantity" placeholder="Enter Quantity">
                     </div>
                     <div class="form-group">
                         <label for="units">Units</label>
-                        <input type="text" class="form-control" id="units" placeholder="Enter Units">
+                        <input type="text" class="form-control" name="units" id="units" placeholder="Enter Units">
                     </div>
-                    <button type="submit" class="btn btn-primary no-outline"><span class="glyphicon glyphicon-ok"></span></button>
+                    <input type="hidden" name="list" id="list-edit-form">
+                    <input type="hidden" name="old-ingredient" id="item-edit-form">
+                    <button type="submit" class="btn btn-primary no-outline" name="submit-edit"><span class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </div>
         </div>
@@ -180,9 +178,13 @@
             popup.style.display = "none";
         }
     }
-    function popup() {
+    function popup(list, item) {
         var popup = document.getElementById('item-edit-popup');
         popup.style.display = "block";
+        var form = document.getElementById('list-edit-form');
+        form.value = list;
+        form = document.getElementById('item-edit-form');
+        form.value = item;
     }
 
     $(".edit-item").hover(
