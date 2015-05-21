@@ -12,7 +12,7 @@ class databaseAPI {
     /* Constructor - open db_connection */
     function __construct(){
 	      $host = "localhost";
-	      $user = "cs130";
+	      $user = "mdang";
 		  $pw = "test";
 		  $db = "CS130";
          $this->db_connection = mysql_connect($host, $user,$pw);

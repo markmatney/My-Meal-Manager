@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         return db.insertWithOnConflict(INVENTORY_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
+    public long addInventoryRow(ItemRow item) {
+        return addInventoryRow(item.getName(), null, item.getQuantity(), item.getUnit());
+    }
+
     public long addGroceryRow(String ingredientName, String description, double quantity, String unit) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -109,6 +114,21 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         db.insertWithOnConflict(INVENTORY_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
+    public void deleteFromGroceryList(String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(GROCERY_LIST_TABLE_NAME, NAME + "=\"" + name + "\"", null);
+    }
+
+    public void deleteFromInventory(String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(INVENTORY_TABLE_NAME, NAME + "=\"" + name + "\"", null);
+    }
+
+    public void deleteFromInventory(ItemRow row) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(INVENTORY_TABLE_NAME, NAME + "=\"" + row.getName() + "\"", null);
+    }
+
     public void moveToInventory(String name) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + GROCERY_LIST_TABLE_NAME + " WHERE " + NAME +
@@ -134,30 +154,23 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         db.delete(GROCERY_LIST_TABLE_NAME, NAME + "=\"" + name + "\"", null);
     }
 
-    public void moveToGrocery(String name, double quantity, boolean removeFromInventory) {
+    public void addToGrocery(String name, double quantity) {
         SQLiteDatabase db = getWritableDatabase();
-        double inventoryQuantity = quantity;
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + INVENTORY_TABLE_NAME + " WHERE " + NAME +
+        Cursor cursor = db.rawQuery("SELECT * FROM " + GROCERY_LIST_TABLE_NAME + " WHERE " + NAME +
                 "=\"" + name + "\"", null);
-        cursor.moveToFirst();
+        double groceryQuantity = 0;
+        if (cursor.moveToFirst()) {
+            groceryQuantity = cursor.getDouble(2);
+        }
+
         ContentValues values = new ContentValues();
         values.put(NAME, cursor.getString(0));
         values.put(DESCRIPTION, cursor.getString(1));
         values.put(UNIT, cursor.getString(3));
 
-        cursor = db.rawQuery("SELECT " + QUANTITY + " FROM " + GROCERY_LIST_TABLE_NAME + " WHERE " + NAME +
-                "=\"" + name + "\"", null);
-        double groceryQuantity = 0;
-        if (cursor.moveToFirst()) {
-            groceryQuantity = cursor.getDouble(0);
-        }
-
-        values.put(QUANTITY, groceryQuantity + inventoryQuantity);
+        values.put(QUANTITY, groceryQuantity + quantity);
 
         db.insertWithOnConflict(GROCERY_LIST_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        if (removeFromInventory) {
-            db.delete(INVENTORY_TABLE_NAME, NAME + "=\"" + name + "\"", null);    }
     }
 
     public List<ItemRow> getInventory() {
@@ -196,4 +209,14 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    public class APIRequestHandler extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+    }
+
+
 }

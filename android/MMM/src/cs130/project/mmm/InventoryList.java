@@ -1,80 +1,146 @@
 package cs130.project.mmm;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
+import android.app.ListFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirections;
 
 /**`
  * Created by mmdango on 4/30/15.
  */
-public class InventoryList extends ListActivity implements SwipeActionAdapter.SwipeActionListener {
+public class InventoryList extends ListFragment implements SwipeActionAdapter.SwipeActionListener {
 
     SwipeActionAdapter mInventoryListAdapter;
+    InventoryListAdapter mRegularListAdapter;
     SQLiteDatabaseHelper mItemsDBHelper;
+
+    private boolean isEditing = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.checkbox_listview);
-        mItemsDBHelper = SQLiteDatabaseHelper.getInstance(this);
-
-        setUpInventory();
-
-
-    }
-
-    private void setUpInventory() {
-        ListView inventoryListView = getListView();//(ListView)findViewById(R.id.items_list);
-
-        View header = getLayoutInflater().inflate(R.layout.checkbox_listview_header, null);
-        ((TextView) header.findViewById(R.id.checkbox_listview_header)).setText("Inventory");
-        inventoryListView.addHeaderView(header);
-
-        InventoryListAdapter adapter = new InventoryListAdapter(this, R.layout.inventory_listview_item,
-                mItemsDBHelper.getInventory());
-
-
-        mInventoryListAdapter = new SwipeActionAdapter(adapter);
-        mInventoryListAdapter.setSwipeActionListener(this)
-                .setDimBackgrounds(true)
-                .setListView(getListView());
-        setListAdapter(mInventoryListAdapter);
-
-        mInventoryListAdapter.addBackground(SwipeDirections.DIRECTION_FAR_LEFT,R.layout.checkbox_listview_footer)
-                .addBackground(SwipeDirections.DIRECTION_NORMAL_LEFT,R.layout.checkbox_listview_footer)
-                .addBackground(SwipeDirections.DIRECTION_FAR_RIGHT,R.layout.checkbox_listview_footer)
-                .addBackground(SwipeDirections.DIRECTION_NORMAL_RIGHT, R.layout.checkbox_listview_footer);
-
-        mInventoryListAdapter.notifyDataSetChanged();
-        //inventoryListView.setAdapter(mInventoryListAdapter);
     }
 
     @Override
-    protected void onListItemClick(ListView listView, View view, int position, long id){
-        Toast.makeText(
-                this,
-                "Clicked "+ mInventoryListAdapter.getItem(position),
-                Toast.LENGTH_SHORT
-        ).show();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return inflater.inflate(R.layout.grocery_list_listview, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mItemsDBHelper = SQLiteDatabaseHelper.getInstance(getActivity());
+        setUpInventory(view);
+        setUpSwipeAdapter();
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.inventory_action_bar, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_mode:
+                if (!isEditing) {
+                    toRegularAdapter();
+                } else {
+                    toSwipeAdapter();
+                }
+                isEditing = !isEditing;
+                return true;
+        }
+        return false;
+    }
+
+
+    private void setUpInventory(final View view) {
+        ListView inventoryListView = getListView();
+        mRegularListAdapter = new InventoryListAdapter(getActivity(), R.layout.inventory_listview_item,
+                mItemsDBHelper.getInventory());
+
+        View header = getActivity().getLayoutInflater().inflate(R.layout.listview_header, null);
+        ((TextView) header.findViewById(R.id.checkbox_listview_header)).setText("Inventory");
+        inventoryListView.addHeaderView(header);
+
+        View footer = getActivity().getLayoutInflater().inflate(R.layout.listview_footer, null);
+        inventoryListView.addFooterView(footer);
+        ImageButton addItemButton = (ImageButton) view.findViewById(R.id.add_item_button);
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText nameText = (EditText) view.findViewById(R.id.add_item_name);
+                EditText quantityText = (EditText) view.findViewById(R.id.add_item_quantity);
+                EditText unitText = (EditText) view.findViewById(R.id.add_item_units);
+                if (nameText.getText().toString().equals("")
+                        || quantityText.getText().toString().equals("")
+                        || unitText.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "All fields required.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ItemRow newRow = new ItemRow(nameText.getText().toString(),
+                        Double.parseDouble(quantityText.getText().toString()),
+                        unitText.getText().toString());
+                mRegularListAdapter.add(newRow);
+                mItemsDBHelper.addInventoryRow(newRow);
+                mRegularListAdapter.notifyDataSetChanged();
+                mInventoryListAdapter.notifyDataSetChanged();
+                nameText.setText("");
+                quantityText.setText("");
+                unitText.setText("");
+            }
+        });
+
+
+    }
+
+    public void setUpSwipeAdapter() {
+        mInventoryListAdapter = new SwipeActionAdapter(mRegularListAdapter);
+        mInventoryListAdapter.setSwipeActionListener(this)
+                .setDimBackgrounds(true)
+                .setListView(getListView());
+
+        setListAdapter(mInventoryListAdapter);
+
+        mInventoryListAdapter.addBackground(SwipeDirections.DIRECTION_FAR_LEFT,R.layout.swipe_to_grocery_list_bg)
+                .addBackground(SwipeDirections.DIRECTION_NORMAL_LEFT,R.layout.swipe_to_grocery_list_bg)
+                .addBackground(SwipeDirections.DIRECTION_FAR_RIGHT,R.layout.swipe_delete_right)
+                .addBackground(SwipeDirections.DIRECTION_NORMAL_RIGHT, R.layout.swipe_delete_right);
+
+        mInventoryListAdapter.notifyDataSetChanged();
+    }
+
+    private void toRegularAdapter() {
+        setListAdapter(mRegularListAdapter);
+        mInventoryListAdapter.setSwipeActionListener(null);
+    }
+
+    private void toSwipeAdapter() {
+        setListAdapter(mInventoryListAdapter);
+        mInventoryListAdapter.setSwipeActionListener(this);
     }
 
     @Override
     public boolean hasActions(int position){
+        if (position == getListView().getChildCount()-1)
+            return false;
         return true;
     }
 
     @Override
     public boolean shouldDismiss(int position, int direction){
-        return direction == SwipeDirections.DIRECTION_NORMAL_LEFT;
+        return direction == SwipeDirections.DIRECTION_FAR_RIGHT || direction == SwipeDirections.DIRECTION_NORMAL_RIGHT;
     }
 
     @Override
@@ -82,30 +148,36 @@ public class InventoryList extends ListActivity implements SwipeActionAdapter.Sw
         for(int i=0;i<positionList.length;i++) {
             int direction = directionList[i];
             int position = positionList[i];
-            String dir = "";
-
+            final ItemRow item;
             switch (direction) {
                 case SwipeDirections.DIRECTION_FAR_LEFT:
-                    dir = "Far left";
-                    break;
                 case SwipeDirections.DIRECTION_NORMAL_LEFT:
-                    dir = "Left";
+                    item = (ItemRow) mInventoryListAdapter.getItem(position-1);
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Add to Grocery List")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mItemsDBHelper.addToGrocery(item.getName().toString(), item.getQuantity());
+
+                                }
+                            })
+                            .show();
                     break;
                 case SwipeDirections.DIRECTION_FAR_RIGHT:
-                    dir = "Far right";
-                    break;
                 case SwipeDirections.DIRECTION_NORMAL_RIGHT:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Test Dialog").setMessage("You swiped right").create().show();
-                    dir = "Right";
+                    item = (ItemRow) mInventoryListAdapter.getItem(position-1);
+                    mItemsDBHelper.deleteFromInventory(item);
+                    mRegularListAdapter.remove(item);
+                    mRegularListAdapter.notifyDataSetChanged();
                     break;
             }
-            Toast.makeText(
-                    this,
-                    dir + " swipe Action triggered on " + mInventoryListAdapter.getItem(position-1),
-                    Toast.LENGTH_SHORT
-            ).show();
             mInventoryListAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
     }
 }
