@@ -49,7 +49,7 @@ public class RecipeSearcher{
 				//check all other arrays for rid.
 				//Don't add rid if any array doesn't have it
 				int ridToCheck = firstArr[i];
-				for (int j = 1; j < ingredMatches.size(); j++){
+				for (int j = 0; j < ingredMatches.size(); j++){
 					int[] arrToCheck = ingredMatches.get(j);
 					int arrToCheckLen = arrToCheck.length;
 					for (int k = 0; k < arrToCheckLen; k++){
