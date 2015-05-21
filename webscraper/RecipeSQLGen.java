@@ -176,13 +176,13 @@ abstract class Recipe
     //String result = new StringBuilder(1024).append("INSERT INTO Recipes VALUES (").append(id).append(",").append(name).append(","+url).toString();
 
     // store the entire query (recipe table insert + ingredient table insert) in string
-    String query = "INSERT INTO Recipes (RecipeName, URL, Image, TotalCookingTime, Instructions) VALUES (\n\t'" + name + "',\n\t'" + url + "',\n\t'" + image + "',\n\t'" + time + "',\n\t'" + this.instructionsToString() + "'\n);\n";
+    String query = "INSERT INTO Recipes (RecipeName, URL, Image, TotalCookingTime, Instructions) VALUES (\n\t'" + name.replaceAll("'", "") + "',\n\t'" + url + "',\n\t'" + image + "',\n\t'" + time + "',\n\t'" + this.instructionsToString().replaceAll("'", "") + "'\n);\n";
     // iterate over ingredients and append to query
     Iterator<Ingredient> it = ingredients.iterator();
     while (it.hasNext())
     {
       Ingredient i = it.next();
-      query += "INSERT INTO Ingredients VALUES (\n\t" + id + ",\n\t'" + i.name() + "',\n\t" + i.qty() + ",\n\t'" + i.units() + "'\n);\n";
+      query += "INSERT INTO Ingredients VALUES (\n\t" + id + ",\n\t'" + i.name().replaceAll("'", "") + "',\n\t" + i.qty() + ",\n\t'" + i.units().replaceAll("'", "") + "'\n);\n";
     }
     //return query + "\n";
     return query.replaceAll("[^\\x00-\\x7F]", "") + "\n";// also need to remove such things as &amp;
