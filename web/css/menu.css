@@ -8,7 +8,6 @@
 .navbar-brand {
     position: absolute;
     width: 100%;
-    left: 0;
     text-align: center;
     margin: auto;
 }
@@ -21,7 +20,7 @@
     margin-right: 10px;
 }
 .navbar {
-    z-index: 0;
+    z-index: 99;
 }
 #wrapper {
     padding-left: 0;
@@ -36,7 +35,7 @@
 }
 
 #sidebar-wrapper {
-    z-index: 1;
+    z-index: 100;
     position: fixed;
     left: 250px;
     width: 0;
@@ -123,7 +122,7 @@
     }
 
     #sidebar-wrapper {
-        width: 250px;
+        width: 20%;
     }
 
     #wrapper.toggled #sidebar-wrapper {

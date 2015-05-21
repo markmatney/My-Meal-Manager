@@ -5,7 +5,7 @@ CREATE TABLE Recipes(
 	URL VARCHAR(512) NOT NULL,
 	Image VARCHAR(512) NOT NULL,
 	TotalCookingTime TIME,
-	Instructions VARCHAR(1000),
+	Instructions VARCHAR(2500),
 	PRIMARY KEY(RecipeID)
 );
 
