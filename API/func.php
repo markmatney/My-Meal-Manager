@@ -11,9 +11,9 @@ class databaseAPI {
     /* Constructor - open db_connection */
     function __construct(){
 	      $host = "localhost";
-	      $user = "cs143";
-		  $pw = "";
-		  $db = "CS143";
+	      $user = "mdang";
+		  $pw = "test";
+		  $db = "CS130";
          $this->db_connection = mysql_connect($host, $user,$pw);
          mysql_select_db($db, $this->db_connection);
          if(!$this->db_connection)
@@ -161,7 +161,7 @@ class databaseAPI {
 		   if($countdata['count'] <= 0)
 		       print "Item doesn't exist";
 		   else
-		       @mysql_query("UPDATE Inventory SET IngredientName = $ingredient,
+		       @mysql_query("UPDATE Inventory SET IngredientName = '$ingredient',
                  			 Quantity ='$qty', Units = '$units'
 							 WHERE (UserID = '$userid' AND IngredientName = '$old')");
 	     }
@@ -272,7 +272,7 @@ class databaseAPI {
 		   if($countdata['count'] <= 0)
 		      print "Item doesn't exist";
 		   else
-		       @mysql_query("UPDATE GroceryList SET IngredientName = $ingredient,
+		       @mysql_query("UPDATE GroceryList SET IngredientName = '$ingredient',
                  			 Quantity ='$qty', Units = '$units'
 							 WHERE (UserID = '$userid' AND IngredientName = '$old')");
 	     }
@@ -516,9 +516,10 @@ class databaseAPI {
 
 	*/
 	
-	function searchRecipes($input){
-		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '; 
-       		 foreach ($input as $i){
+	function searchRecipes($userid, $ingreds){
+		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '. $userid . ' ';
+		 
+       		 foreach ($ingreds as $i){
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
@@ -527,5 +528,8 @@ class databaseAPI {
 	}
 }
 ?>
+
+
+
 
 

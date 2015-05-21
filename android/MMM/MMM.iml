@@ -20,5 +20,6 @@
     <orderEntry type="library" name="AndroidSwipeLayout-v1.1.8 (2)" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="swipeactionadapter-1.4.1" level="project" />
+    <orderEntry type="library" name="android-support-v7-appcompat" level="project" />
   </component>
 </module>

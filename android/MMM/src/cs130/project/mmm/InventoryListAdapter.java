@@ -5,9 +5,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
+import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 
 import java.util.List;
 
@@ -20,6 +19,11 @@ public class InventoryListAdapter extends ArrayAdapter<ItemRow> {
         super(context, layoutResourceId, data);
         this.mResourceId = layoutResourceId;
         this.mContext = context;
+    }
+
+    @Override
+    public void remove(ItemRow object) {
+        super.remove(object);
     }
 
     @Override
