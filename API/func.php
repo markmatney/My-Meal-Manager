@@ -2,8 +2,7 @@
 /*
 todo:
 
-how to handle recipeid uniqueness
-time for recipe, change to minutes
+time for recipe?
 
 */
 class databaseAPI {
@@ -34,9 +33,10 @@ class databaseAPI {
 	function getUserID($name){
 	     $id =  mysql_fetch_assoc(@mysql_query("SELECT UserID FROM UserUNandID WHERE '$name' = UserName"));
 	     $userid = $id['UserID'];
-		  if($userid == 0)
-		    { print "User doesn't exist!";
-			 exit(1);}
+		 if($userid == 0){ 
+			  print "User doesn't exist!";
+			  exit(1);
+		  }
 		  else
 	         return $userid;
 	}
@@ -53,11 +53,11 @@ class databaseAPI {
 		  $countdata = mysql_fetch_assoc($count);
 		  if($countdata['count'] >= 1){
 		         print "User already exists!";
-               exit(1);
-				}
+                 exit(1);
+		  }
           else
 		  {   
-              @mysql_query("INSERT INTO UserUNandID VALUES	(0,'$name','$pw')");
+              @mysql_query("INSERT INTO UserUNandID VALUES (0,'$name','$pw')");
           }			  
 		}		
 	}
@@ -68,7 +68,7 @@ class databaseAPI {
 	false otherwise.
 	*/
 	function checkIfValidUser($name,$pw){
-	    if(($name != NULL) && ($pw != NULL)){
+	      if(($name != NULL) && ($pw != NULL)){
               $count = @mysql_query("SELECT COUNT(*) as count FROM UserUNandID  WHERE ('$name' = UserName)");
 		  $countdata = mysql_fetch_assoc($count);
 		  if($countdata['count'] <= 0){
@@ -84,6 +84,22 @@ class databaseAPI {
 			  else return false;
           }			  
 		}		
+	}
+	
+	/* updateUserPW
+	
+	Takes a username and updates old password to new password
+	*/
+	function updateUserPW($name,$oldpw,$newpw){
+		  if(($name != NULL) && ($oldpw != NULL))
+              $count = @mysql_query("SELECT COUNT(*) as count FROM UserUNandID  WHERE ('$name' = UserName)");
+		  $countdata = mysql_fetch_assoc($count);
+		  if($countdata['count'] <= 0){
+		         print "User does not exist!";
+                 exit(1);
+		  }
+		  @mysql_query("UPDATE UserUNandID SET Password = '$newpw' WHERE ('$name' = UserName AND
+		                Password = '$oldpw')");
 	}
 	
 	/*  addToInventory
@@ -127,7 +143,30 @@ class databaseAPI {
 		     @mysql_query("DELETE FROM Inventory WHERE (UserID = '$userid' AND IngredientName = '$ingredient' AND Units ='$units')");
 	     }
 	}
+	
+	/*  updateInventory
 
+	Takes as input a UserId, old ingredient, new ingredient name, 
+	new quantity, and new units and updates the old ingredient with the new
+	values.
+	*/
+	function updateInventory($userid, $old, $ingredient, $qty, $units){
+		 if((userid != NULL) && ($old != NULL) && ($ingredient != NULL) && ($qty != NULL)&& ($units != NULL))
+		 { 
+		   if($qty <= 0)
+		     return;
+		   $count = @mysql_query("SELECT COUNT(*) as count FROM Inventory WHERE (UserID = '$userid' 
+		                         AND IngredientName = '$old')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		       print "Item doesn't exist";
+		   else
+		       @mysql_query("UPDATE Inventory SET IngredientName = $ingredient,
+                 			 Quantity ='$qty', Units = '$units'
+							 WHERE (UserID = '$userid' AND IngredientName = '$old')");
+	     }
+	}
+	
 	/* getInventory
 
 	Takes as input a UserId and returns a JSON array in the format:
@@ -147,9 +186,7 @@ class databaseAPI {
 		   $unit = $row['Units'];
 		     $array2 = array($qty,$unit,$name);
 			$array[$i] = $array2;
-			$i = $i+1;
-			
-				
+			$i = $i+1;		
 		}
 	return json_encode($array);
 	}
@@ -217,7 +254,30 @@ class databaseAPI {
 		}
 			return json_encode($array);
 	}
-    
+ 
+	/*  updateGrocery
+	
+	Takes as input a UserId, old ingredient, new ingredient name, 
+	new quantity, and new units and updates the old ingredient with the new
+	values.
+	*/
+	function updateGrocery($userid, $old, $ingredient, $qty, $units){
+		 if((userid != NULL) && ($old != NULL) && ($ingredient != NULL) && ($qty != NULL)&& ($units != NULL))
+		 { 
+		   if($qty <= 0)
+		     return;
+		   $count = @mysql_query("SELECT COUNT(*) as count FROM GroceryList WHERE (UserID = '$userid' 
+		                         AND IngredientName = '$old')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		      print "Item doesn't exist";
+		   else
+		       @mysql_query("UPDATE GroceryList SET IngredientName = $ingredient,
+                 			 Quantity ='$qty', Units = '$units'
+							 WHERE (UserID = '$userid' AND IngredientName = '$old')");
+	     }
+	}
+	
 	/* getRecipeID
 	
 	Takes recipe name and converts it to ID
@@ -231,15 +291,34 @@ class databaseAPI {
 	         return $recipeid;
 	}
 	
+	
 	/* addRecipe
 
-	Takes as input a name, url, image, cooking time(minutes), instructions and
+	Takes as input a name, url, image url, cooking time(minutes), instructions and
 	adds the recipe to the list of recipes. 
 	*/
-	function addRecipe($name,$url,$time,$instructions){
-	   @mysql_query("INSERT INTO Recipes VALUES (0,'$name','$url',NULL, '$time', '$instructions')");
+	function addRecipe($name,$url,$img,$time,$instructions){
+	   @mysql_query("INSERT INTO Recipes VALUES (0,'$name','$url','$img', '$time', '$instructions')");
 	}
-	 
+	
+	/* updateRecipe
+	
+	Takes a recipe id and updates with new name, url, img, time, and instructions
+	*/
+	function updateRecipe($id, $name,$url,$img,$time,$instructions){
+		 if(($name != NULL) && ($id != NULL))
+		 { 
+		   $count = @mysql_query("SELECT COUNT(*) as count FROM Recipes WHERE (RecipeID = '$id')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		      print "Recipe doesn't exist";
+		   else
+		       @mysql_query("UPDATE Recipes SET RecipeName = $name,
+                 			 URL = '$url', Image = '$img', TotalCookingTime = '$time',
+							 Instructions = '$instructions' WHERE (RecipeID = '$id')");
+	     }
+	}
+	
 	/* addIngredientToRecipe
 
 	Takes as input a recipe name, ingredient name, quantity, units
@@ -259,7 +338,45 @@ class databaseAPI {
 		     @mysql_query("INSERT INTO Ingredients VALUES ('$recipeid','$ingredient','$qty','$units')");
 	     }
 	}
-
+	
+	/* RemoveIngredientFromRecipe
+	
+	Takes as input a recipe name, ingredient name
+	and removes from the list
+	*/
+    function RemoveIngredientFromRecipe($recipe, $ingredient){
+	   $recipeid = $this->getRecipeID($recipe);
+	   if(($recipeid != NULL) && ($ingredient != NULL))
+		{ 
+		  $count = @mysql_query("SELECT COUNT(*) as count FROM Ingredients WHERE (Recipe = '$recipeid' AND IngredientName = '$ingredient')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] >= 1)
+		     @mysql_query("DELETE FROM Ingredients WHERE (Recipe = '$recipeid' AND IngredientName = '$ingredient')");
+	     }
+	}
+	
+	/* UpdateIngredientRecipe
+	
+	Takes as input a recipe name, old and new ingredient name, quantity, and units
+	and updates the old ingredient to the new ingredient values.
+	*/
+    function UpdateIngredientRecipe($recipe, $old, $ingredient, $qty, $units){
+	   $recipeid = $this->getRecipeID($recipe);
+	   if(($recipeid != NULL) && ($ingredient != NULL) && ($old != NULL) && ($qty !=NULL) && ($units != NULL))
+		{ 
+		   if($qty <= 0)
+		     return;
+		   $count = @mysql_query("SELECT COUNT(*) as count FROM Ingredients WHERE (Recipe = '$recipeid' AND IngredientName = '$old')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		      print "Item doesn't exist";
+			else
+		      @mysql_query("UPDATE Ingredients SET IngredientName = $ingredient,
+                 			 Quantity ='$qty', Units = '$units'
+							 WHERE (Recipe = '$recipeid' AND IngredientName = '$old')");
+	     }
+	}
+	
 	/* getRecipeIngredients
 	
 	Takes as input a Recipe name and outputs a JSON array of the
@@ -330,6 +447,24 @@ class databaseAPI {
 		  }
 	}
 
+	/*  removeRecipeFromUser
+
+	Takes as input a UserId and Recipe Name and adds the recipe
+	to the user's saved RecipeList.
+	*/
+	function removeRecipeFromUser($recipe,$userid){
+	 if(($recipe != NULL) && ($userid != NULL))
+		{ 
+	     $recipeid = $this->getRecipeID($recipe);
+		 $count = @mysql_query("SELECT COUNT(*) as count FROM UserRecipes WHERE (RecipeID = '$recipeid' AND UserID ='$userid')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		     return;
+		   else
+		    @mysql_query("DELETE FROM UserRecipes WHERE(RecipeID = '$recipeid' AND UserID ='$userid')");
+		  }
+	}
+	
 	/* getUserRecipes
 
 	Takes as input a UserID and outputs the
@@ -380,9 +515,11 @@ class databaseAPI {
 	<RecipeName2><br> ...
 
 	*/
-	function searchRecipes($input){
-		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '; 
-       		 foreach ($input as $i){
+	
+	function searchRecipes($userid, $ingreds){
+		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '. $userid . ' ';
+		 
+       		 foreach ($ingreds as $i){
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
@@ -391,4 +528,8 @@ class databaseAPI {
 	}
 }
 ?>
+
+
+
+
 

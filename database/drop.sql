@@ -1,4 +1,4 @@
-USE CS143;
+USE CS130;
 DROP TABLE GroceryList ;
 DROP TABLE Inventory ;
 DROP TABLE UserRecipes ;
