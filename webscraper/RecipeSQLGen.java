@@ -20,6 +20,8 @@
  * Output: prints to stdout a SQL query that inserts recipe information into a
  *         database. The output can then be redirected to a file with >, or piped to
  *         other utilities, such as mysql, with |.
+ *
+ *         $> java Main recipes [DATABASE] [NEXTRECIPEID] | mysql -h localhost -u [USER] -p[PASS]
  */
 
 import java.io.*;
@@ -182,7 +184,8 @@ abstract class Recipe
       Ingredient i = it.next();
       query += "INSERT INTO Ingredients VALUES (\n\t" + id + ",\n\t'" + i.name() + "',\n\t" + i.qty() + ",\n\t'" + i.units() + "'\n);\n";
     }
-    return query + "\n";
+    //return query + "\n";
+    return query.replaceAll("[^\\x00-\\x7F]", "") + "\n";// also need to remove such things as &amp;
   }
 }
 
