@@ -161,7 +161,7 @@ class databaseAPI {
 		   if($countdata['count'] <= 0)
 		       print "Item doesn't exist";
 		   else
-		       @mysql_query("UPDATE Inventory SET IngredientName = $ingredient,
+		       @mysql_query("UPDATE Inventory SET IngredientName = '$ingredient',
                  			 Quantity ='$qty', Units = '$units'
 							 WHERE (UserID = '$userid' AND IngredientName = '$old')");
 	     }
