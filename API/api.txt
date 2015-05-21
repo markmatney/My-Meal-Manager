@@ -135,5 +135,5 @@
         missing from the user's grocerylist and inventory.
 	*/
 
-	function searchRecipes($input)
+	function searchRecipes($userid, $ingreds)
 /////////////////////////////////////////////////////////////////////////

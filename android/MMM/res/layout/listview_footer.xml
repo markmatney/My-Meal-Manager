@@ -28,12 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
-    <Button
+    <ImageButton
             android:id="@+id/add_item_button"
-            android:layout_width="50dp"
-            android:padding="5dp"
-            android:layout_height= "wrap_content"
-
-            android:text="O"/>
+            android:layout_width="30dp"
+            android:padding="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_height= "30dp"
+            android:src="@drawable/green_checkmark"
+            android:scaleType="fitXY"/>
 
 </LinearLayout>

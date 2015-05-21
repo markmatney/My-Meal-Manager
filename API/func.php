@@ -11,7 +11,7 @@ class databaseAPI {
     /* Constructor - open db_connection */
     function __construct(){
 	      $host = "localhost";
-	      $user = "cs130";
+	      $user = "mdang";
 		  $pw = "test";
 		  $db = "CS130";
          $this->db_connection = mysql_connect($host, $user,$pw);
@@ -516,9 +516,10 @@ class databaseAPI {
 
 	*/
 	
-	function searchRecipes($input){
-		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '; 
-       		 foreach ($input as $i){
+	function searchRecipes($userid, $ingreds){
+		$execstring = 'java -cp .:mysql-connector-java-5.1.35-bin.jar MyMealManager.searchMain '. $userid . ' ';
+		 
+       		 foreach ($ingreds as $i){
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
@@ -527,3 +528,8 @@ class databaseAPI {
 	}
 }
 ?>
+
+
+
+
+
