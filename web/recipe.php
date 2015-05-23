@@ -30,10 +30,9 @@
     }
     echo '</div></div>';
 
-    echo '<div>Cooking Time: '.$time. '</div>';
-
-    echo '<div id="instr">';
+    echo '<div id="instr" style="clear:both;">';
     echo '<ol>';
+    echo '<p>Cooking Time: '.$time.'</p>';
     echo $instr;
     echo '</ol></div>';
 

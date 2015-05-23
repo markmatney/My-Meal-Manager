@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    	background-color: #E9E9E9;
 }
 ul {
 	list-style-type: none;
@@ -20,7 +21,7 @@ ul {
 	overflow: scroll;
 	height: 100vh;
 	padding: 30px;
-	border-right: 10px solid white;
+	border-right: 10px solid #E9E9E9;
 	background-color: #F7EE78;
 	margin-bottom: 20px;
 }

@@ -66,27 +66,26 @@
         <!-- Page Content -->
         <div id="grid" class="container-fluid">
             <?php 
-                /*if (isset($_GET["submit"])) {
+                if (isset($_GET["submit"])) {
                     $keywords = explode(" ", $_GET['search']);
                 } else {
                     $keywords = [];
                 }
 
-                $recipe_list = $api->searchRecipes($uid, $keywords);*/
-                $recipe_list = json_decode($api->getAllRecipes());
+                $recipe_list = json_decode($api->searchRecipes($uid, $keywords));
                 $max = sizeof($recipe_list);
-                if ($max != 0) {
+                if ($recipe_list[0] != "No matching recipes found!") {
                     $i = 0;
-                    while (($i < $max) && ($i < 9)) {
+                    while ($i < $max) {
                         $recipe = json_decode($api->getRecipe($recipe_list[$i]));
-                        echo '<div class="col-md-4 recipe-item">';
+                        echo '<div class="col-md-2 recipe-item">';
                         echo '<button class="popup_open" onclick="open_popup(this);">';
                         echo '<div class="image">';
                         echo '<div class="container-fluid">';
                         echo '<img src="'.$recipe[2].'" class="img-responsive"/>';
                         echo '</div></div>';
                         echo '<div class="description">';
-                        echo '<h2>'.$recipe[0].'</h2>';
+                        echo '<strong>'.$recipe[0].'</strong>';
                         echo '</div></button></div>';
                         $i++;
                     }
@@ -96,7 +95,8 @@
                     echo '</div>';
                 }
             ?>
-            <div id="recipe_popup">
+
+            <div id="recipe_popup" style="display:none;">
             </div>
         </div>
         <!-- end PageContent -->
@@ -119,7 +119,7 @@
             $('#my_popup').popup();
         });
         function open_popup(element) {
-            var recipe_name = element.getElementsByTagName("h2")[0].innerHTML;
+            var recipe_name = element.getElementsByTagName("strong")[0].innerHTML;
 
             $.ajax({
               method: "GET",

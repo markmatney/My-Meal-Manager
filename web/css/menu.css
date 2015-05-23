@@ -21,6 +21,7 @@
 }
 .navbar {
     z-index: 99;
+    background-color: #FFFFFF;
 }
 #wrapper {
     padding-left: 0;

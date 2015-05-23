@@ -2,16 +2,28 @@
     padding-top: 70px;
     z-index: -1;
     padding-left: 30px;
+    background-color: #E9E9E9;
+    height: 100vh;
+    overflow: scroll;
 }
 .description {
     text-align: center;
+    height: 50px;
+    margin-top: 5px;
 }
 a, a:hover{
     text-decoration: none;
     color: black;
 }
 .recipe-item {
-
+    margin: 10px;
+    padding-top: 10px;
+    background-color: #FFFFFF;
+    border: solid 1px #E7E7E7;
+    border-radius: 5px;
+}
+.container-fluid {
+    padding: 0px;
 }
 #recipe_popup {
     background-color: white;
@@ -29,15 +41,16 @@ a, a:hover{
     border: none;
 }
 .recipe-item img{
-    max-height: 200px;
     margin-right: auto;
     margin-left: auto; 
+    border-radius: 5px;
+    max-height: 175px;
 }
 .popup_open {
     background-color: transparent;
     border: none;
+    width: 100%;
 }
-
 #image {
     width: 40%;
     float: left;

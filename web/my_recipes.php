@@ -58,16 +58,16 @@
                 $max = sizeof($recipe_list);
                 if ($max != 0) {
                     $i = 0;
-                    while (($i < $max) && ($i <= 9)) {
+                    while ($i < $max) {
                         $recipe = json_decode($api->getRecipe($recipe_list[$i]));
-                        echo '<div class="col-md-4 recipe-item">';
+                        echo '<div class="col-md-2 recipe-item">';
                         echo '<button class="popup_open" onclick="open_popup(this);">';
                         echo '<div class="image">';
                         echo '<div class="container-fluid">';
                         echo '<img src="'.$recipe[2].'" class="img-responsive"/>';
                         echo '</div></div>';
                         echo '<div class="description">';
-                        echo '<h2>'.$recipe[0].'</h2>';
+                        echo '<strong>'.$recipe[0].'</strong>';
                         echo '</div></button></div>';
                         $i++;
                     }
@@ -78,8 +78,8 @@
                 }
             ?>
         </div>
-            <div id="recipe_popup">
-            </div>
+        <div id="recipe_popup" style="display:none;">
+        </div>
         <div id="add_content">
             <button class="btn btn-default" id="add_button"><span class="glyphicon glyphicon-plus"></span></button>
             <div id="add_recipe_popup">
@@ -135,7 +135,7 @@
             $('#add_recipe_popup').popup();
         });
         function open_popup(element) {
-            var recipe_name = element.getElementsByTagName("h2")[0].innerHTML;
+            var recipe_name = element.getElementsByTagName("strong")[0].innerHTML;
 
             $.ajax({
               method: "GET",
