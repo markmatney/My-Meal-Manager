@@ -528,10 +528,9 @@ class databaseAPI {
 	sorted by number of ingreds the recipe requires that aren't in 
 	the given user's inventory or grocery list
 
-	Input format: (int userid, String[] ingredients) 
-	Ouput format: 
-	<RecipeName1><br>
-	<RecipeName2><br> ...
+	Input: (int userid, String[] ingredients) 
+	Ouput: a JSON array with the format 
+		["<RecipeName1>", "<RecipeName2>", ... ]
 
 	*/
 	
@@ -542,9 +541,8 @@ class databaseAPI {
 			$execstring .= $i;
 			$execstring .= ' ';
 		}
-		echo $execstring;
-		$output = shell_exec($execstring);
-		echo $output;
+		exec($execstring, $results);
+		echo json_encode($results);
 	}
 }
 ?>

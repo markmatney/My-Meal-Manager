@@ -81,6 +81,30 @@ public class RecipeSearcher{
 		try {
                      conn = DbManager.getConnection(true);
 
+		if (ridLen == 1 && rids.get(0) == -1){ //means ret all recipes
+				ResultSet rs = 
+			conn.createStatement().executeQuery("SELECT * FROM Recipes");
+			if (rs != null && rs.last()){
+				int rsCount = rs.getRow();
+				rs.beforeFirst();
+				Recipe[] recipes = new Recipe[rsCount];
+				int arrPos = 0; 
+				while(rs.next()){
+		                      recipes[arrPos] = new Recipe(rs.getString("RecipeName"), rs.getInt("RecipeID"), rs.getString("Instructions"), rs.getTime("TotalCookingTime").getHours(), rs.getTime("TotalCookingTime").getMinutes());
+ 
+				      arrPos++;
+				}
+				conn.close();
+				return recipes;
+			}
+			//if get to next 2 lines, no recipes in db or 
+			//something went wrong
+			conn.close();
+			return null;
+		}
+
+		//for normal recipe matching (specific set, not all rids)
+		else{
 		for (int i = 0; i < ridLen; i++){
 			ResultSet rs = 
 			conn.createStatement().executeQuery(queryBase + 
@@ -101,6 +125,7 @@ public class RecipeSearcher{
 		}
 		conn.close();//close connection
 		return recipes;
+		}
 		}
 		catch (SQLException ex){System.out.println(ex);}
 		return null;
@@ -123,8 +148,18 @@ public class RecipeSearcher{
 		return recipes;
 	}
 	public static Recipe[] executeSearch(int userid, Ingredient[] ingredients){
-		ArrayList<Integer> rids = getRids(ingredients);
-		Recipe[] recipes = getMatchingRecipes(rids);
+
+		Recipe[] recipes;
+		if (ingredients.length > 0){
+			ArrayList<Integer> rids = getRids(ingredients);
+			recipes = getMatchingRecipes(rids);
+		}
+		else{ //handle case of no input ingreds
+			ArrayList<Integer> ridsWithAllIngred = 
+				new ArrayList<Integer>(); 
+			ridsWithAllIngred.add(-1); //assume normal rids are +
+			recipes = getMatchingRecipes(ridsWithAllIngred);
+		}
 		return sortByMissingIngred(userid, recipes);
 	}
 

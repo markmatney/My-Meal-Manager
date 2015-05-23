@@ -134,9 +134,9 @@
 /////////////////////////////////////////////////////////////////////////
 	/*searchRecipes
 
-	Takes as input a UserID and a list of ingredients. Returns list of 
-	recipe names in the format:
-	<RecipeName> <br>
+	Takes as input a UserID and a list of ingredients. Returns JSON 
+	array of recipe names in the format:
+	["<RecipeName1>","<RecipeName2>",...]
 	Returned recipes are sorted by fewest ingredients required that are 
         missing from the user's grocerylist and inventory.
 	*/
