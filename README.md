@@ -17,7 +17,7 @@ Our website uses a LAMP (Linux, Apache, MySql, PHP) based web structure.
     
 1) Set up your machine following the instructions of any of the links below:   
   
-MAC: jason.pureconcepts.net/2014/11/install-apache-php-mysql-mac-os-x-yosemite/   
+MAC: http://jason.pureconcepts.net/2014/11/install-apache-php-mysql-mac-os-x-yosemite/   
 Ubuntu: https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu   
 Windows: http://www.ultraedit.com/support/tutorials_power_tips/uestudio/local_php_mysql_dev_environment.html   
   
