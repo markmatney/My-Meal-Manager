@@ -32,36 +32,37 @@ your Web Document Root folder or the folder that your local server serves
   
 3) Download MySQL and login as root (make sure that MySQL Server is running):  
   
-$ mysql --user=root root  
+    $ mysql --user=root root  
   
 4) Create a user "cs130" with password "test" and grant the  
 new user with all privileges. This allows the files to access and modify the   
 database.  
   
-mysql> CREATE USER 'cs130'@'localhost' IDENTIFIED BY 'test';  
-mysql> GRANT ALL PRIVILEGES ON *.* TO 'cs130'@'localhost';  
-mysql> exit  
+    mysql> CREATE USER 'cs130'@'localhost' IDENTIFIED BY 'test';  
+    mysql> GRANT ALL PRIVILEGES ON *.* TO 'cs130'@'localhost';  
+    mysql> exit  
   
 5) Login as the new user and create a new database:  
   
-$ mysql -h localhost -u cs130 -ptest  
-mysql> CREATE DATABASE CS130;  
+    $ mysql -h localhost -u cs130 -ptest  
+
+    mysql> CREATE DATABASE CS130;  
   
 6) Build the table schema with the createTables.sql script in the "database"   
 folder.  
   
-mysql> SOURCE createTables.sql;  
-mysql> exit  
+    mysql> SOURCE createTables.sql;  
+    mysql> exit  
   
 7) To initialize it with recipe data, compile and run the web scraper code in   
 the "webscraper" folder:  
   
-$ cd webscraper  
-$ javac RecipeSQLGen.java  
-$ java Main recipes CS130 | mysql -h localhost -u cs130 -ptest  
+    $ cd webscraper  
+    $ javac RecipeSQLGen.java  
+    $ java Main recipes CS130 | mysql -h localhost -u cs130 -ptest  
   
 8) To access the website, replace "user" with your system username:  
   
-$ google-chrome http://localhost/~user/web/   
-$ firefox http://localhost/~user/web/  
+    $ google-chrome http://localhost/~user/web/   
+    $ firefox http://localhost/~user/web/  
   
