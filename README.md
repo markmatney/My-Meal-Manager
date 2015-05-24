@@ -7,12 +7,7 @@ specifically include a grocery list, an inventory tracker, a search function, a
 recipe book, and a user profile.  
   
 ### Authors:  
-  Sandra da Silva,   
-  Michael Dang,   
-  Albert Huang,   
-  Mark Matney,   
-  Ken Ohhashi,   
-  Jessica Pham.   
+Sandra da Silva, Michael Dang, Albert Huang, Mark Matney, Ken Ohhashi, Jessica Pham.
   
 Spring 2015, UCLA  
   
