@@ -9,7 +9,7 @@ recipe book, and a user profile.
 ### Authors:  
 Sandra da Silva, Michael Dang, Albert Huang, Mark Matney, Ken Ohhashi, Jessica Pham.
   
-Spring 2015, UCLA  
+_CS 130 @ UCLA, Spring 2015_
   
 ## Setup  
   
