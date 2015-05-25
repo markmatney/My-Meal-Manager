@@ -542,7 +542,7 @@ class databaseAPI {
 			$execstring .= ' ';
 		}
 		exec($execstring, $results);
-		echo json_encode($results);
+		return json_encode($results);
 	}
 	
 	/* checkInventory()
