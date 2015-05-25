@@ -544,5 +544,59 @@ class databaseAPI {
 		exec($execstring, $results);
 		echo json_encode($results);
 	}
+	
+	/* checkInventory()
+	
+	Takes a userid and ingredient and checks the
+	user's inventory if the ingredient exists
+	Returns true if item exists, 
+	else returns false
+	*/
+	function checkInventory($userid, $ingredient){
+	
+		   $count = @mysql_query("SELECT COUNT(*) as count FROM Inventory WHERE (UserID = '$userid' 
+		                         AND IngredientName = '$ingredient')");
+		   $countdata = mysql_fetch_assoc($count);
+		   if($countdata['count'] <= 0)
+		       return false;
+		   else return true;
+	}
+	
+	/* checkQuantity
+	
+	Takes in userid, recipeid, ingredient
+	and checks if the user inventory has enough qty for the ingredient
+	in the recipe.
+	Returns true if qty is sufficient otherwise
+	returns false.
+	*/
+	
+	function checkQuantity($userid, $recipeid, $ingredient){
+	       if(($recipeid != NULL) && ($userid != NULL) && ($ingredient != NULL)){
+		       if($this->checkInventory($userid,$ingredient))
+			   {
+			         $count = @mysql_query("SELECT COUNT(*) as count FROM Ingredients WHERE (Recipe = '$recipeid' AND IngredientName = '$ingredient')");
+		             $countdata = mysql_fetch_assoc($count);
+		             if($countdata['count'] <= 0)
+		                  return false;
+					 $tmp = @mysql_query("SELECT * FROM Inventory WHERE (UserID = '$userid' AND IngredientName='$ingredient')");
+			         $tmp1 = mysql_fetch_assoc($tmp);
+					 $qty1 = $tmp1['Quantity'];
+		
+					 $tmpx = @mysql_query("SELECT * FROM Ingredients WHERE (Recipe = '$recipeid' AND IngredientName='$ingredient')");
+			         $tmp2 = mysql_fetch_assoc($tmpx);
+					 $qty2 = $tmp2['Quantity'];
+				
+					 if ($qty1 >= $qty2)
+					    return true;
+				     else 
+					    return false;
+			   }
+			   else
+			      return false;
+		   }
+		   else
+		     return false;
+	}
 }
 ?>

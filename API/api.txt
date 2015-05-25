@@ -143,3 +143,25 @@
 
 	function searchRecipes($userid, $ingreds)
 /////////////////////////////////////////////////////////////////////////
+    /* checkQuantity
+	
+	Takes in userid, recipeid, ingredient
+	and checks if the user inventory has enough qty for the ingredient
+	in the recipe.
+	Returns true if qty is sufficient otherwise
+	returns false.
+	*/
+	
+	function checkQuantity($userid, $recipeid, $ingredient)
+/////////////////////////////////////////////////////////////////////////
+    /* checkInventory()
+	
+	Takes a userid and ingredient and checks the
+	user's inventory if the ingredient exists
+	Returns true if item exists, 
+	else returns false
+	*/
+	
+	function checkInventory($userid, $ingredient)
+	
+	
