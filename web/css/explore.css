@@ -73,3 +73,32 @@ button {
 label {
     margin-left: 10px;
 }
+.submit-btn {
+    margin: 10px;
+}
+.btn.no-outline {
+    background-color: transparent;
+}
+.btn-primary.no-outline {
+    float: right;
+    color: #8BABD6;
+    border: none;
+}
+.btn-primary.no-outline:hover, .btn-primary.no-outline:focus, .btn-primary.no-outline:active, .btn-primary.no-outline.active, .open > .dropdown-toggle.btn-primary {
+    float: right;
+    color: #33a6cc;
+    border: none;
+}
+.btn-primary.no-outline:active, .btn-primary.no-outline.active {
+    float: right;
+    color: #007299;
+    box-shadow: none;
+    border: none;
+}
+.alert {
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+.ingredient-item {
+    clear: both;
+}

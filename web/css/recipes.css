@@ -109,3 +109,9 @@ label {
     box-shadow: none;
     border: none;
 }
+.submit-btn {
+    margin: 10px;
+}
+.ingredient-item {
+    clear: both;
+}

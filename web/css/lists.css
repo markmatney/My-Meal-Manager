@@ -48,7 +48,7 @@ hr {
 	border-bottom: 1px solid #8BABD6;
 	padding: 5px;
 	cursor: move;
-	height: 40px;
+	
 	background-color: #F7EE78;
 }
 .sortable-placeholder {
@@ -102,11 +102,17 @@ label {
 	font-size: 15px;
 	font-weight: bold;
 	color: black;
-	width: 60%;
+	width: 55%;
 }
-.item-quantity, .item-units {
+.item-units {
 	text-align: center;
 	color: gray;
+	width: 2%;
+}
+.item-quantity {
+	text-align: center;
+	color: gray;
+	width: 8%;
 }
 #item-edit-popup {
   display: none;

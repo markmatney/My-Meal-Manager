@@ -78,7 +78,7 @@
                 }
             ?>
         </div>
-        <div id="recipe_popup" style="display:none;">
+        <div id="recipe_popup">
         </div>
         <div id="add_content">
             <button class="btn btn-default" id="add_button"><span class="glyphicon glyphicon-plus"></span></button>
@@ -113,6 +113,8 @@
                 </form>
             </div>
         </div>
+        <div id="use_recipe_popup">
+        </div>
         <!-- end PageContent -->
     </div>
 
@@ -131,8 +133,9 @@
     <script>
         $(document).ready(function() {
             // Initialize the plugin
-            $('#my_popup').popup();
+            $('#recipe_popup').popup();
             $('#add_recipe_popup').popup();
+            $('#use_recipe_popup').popup();
         });
         function open_popup(element) {
             var recipe_name = element.getElementsByTagName("strong")[0].innerHTML;

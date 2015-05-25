@@ -67,7 +67,11 @@
         <div id="grid" class="container-fluid">
             <?php 
                 if (isset($_GET["submit"])) {
-                    $keywords = explode(" ", $_GET['search']);
+
+                    $keywords = explode(",", $_GET['search']);
+                    for ($i = 0; $i < sizeof($keywords); $i++) {
+                        $keywords[$i] = '"'.trim($keywords[$i]).'"';
+                    }
                 } else {
                     $keywords = [];
                 }
@@ -91,12 +95,12 @@
                     }
                 } else {
                     echo '<div class="alert alert-danger" role="alert">';
-                    echo "There are no recipes bookmarked. Please add a recipe or explore some recipes.";
+                    echo "There are no recipes with the specified keywords. Please search for a different recipe.";
                     echo '</div>';
                 }
             ?>
 
-            <div id="recipe_popup" style="display:none;">
+            <div id="recipe_popup">
             </div>
         </div>
         <!-- end PageContent -->
@@ -116,8 +120,9 @@
     <script>
         $(document).ready(function() {
             // Initialize the plugin
-            $('#my_popup').popup();
-        });
+            $('#recipe_popup').popup();
+            $('#use_recipe_popup').popup();
+        });  
         function open_popup(element) {
             var recipe_name = element.getElementsByTagName("strong")[0].innerHTML;
 
@@ -137,6 +142,42 @@
             $("#recipe_template").remove();
             $('#recipe_popup').popup('hide');
         }
+        function select_ingredient(element) {
+            $("." + $(element).data("group")).prop('disabled', !element.checked);
+        }
+        function addIngredient() {
+            var span = document.querySelector('#add-ingredient');
+            var count = span.dataset.count;
+
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "select-ingredient[]";
+            checkbox.onchange = "select_ingredient(this);";
+            checkbox.setAttribute("data", "group: group_"+count);
+            checkbox.checked = true;
+
+            var name = document.createElement('input');
+            name.className = "col-md-6 group_"+count;
+            name.type = "text";
+            name.name = "ingredient-name[]";
+            name.placeholder = "Ingredient Name";
+
+            var quantity = document.createElement('input');
+            quantity.className = "col-md-2 group_"+count;
+            quantity.type = "text";
+            quantity.name = "quantity[]";
+            quantity.placeholder = "Quantity";
+
+            var units = document.createElement('input');
+            units.className = "col-md-3 group_"+count;
+            units.type = "text";
+            units.name = "units[]";
+            units.placeholder = "Units";
+
+            span.appendChild(name);
+            span.appendChild(quantity);
+            span.appendChild(units);
+        };
     </script>
 
 </body>
