@@ -163,5 +163,14 @@
 	*/
 	
 	function checkInventory($userid, $ingredient)
+/////////////////////////////////////////////////////////////////////////
+	/* getIngredientInfoFromInventory() 
+	
+	Takes userid and ingredient name and returns a JSON array in the format:
+	["<Quantity1>", "<Units1>", "<IngredientName1>"]
+	*/
+	
+	function getIngredientInfoFromInventory($userid, $ingredient)
+/////////////////////////////////////////////////////////////////////////	
 	
 	

@@ -598,5 +598,28 @@ class databaseAPI {
 		   else
 		     return false;
 	}
+	
+	/* getIngredientInfoFromInventory() 
+	
+	Takes userid and ingredient name and returns a JSON array in the format:
+	["<Quantity1>", "<Units1>", "<IngredientName1>"]
+	*/
+	
+	function getIngredientInfoFromInventory($userid, $ingredient){
+	    if((userid != NULL) && ($ingredient!= NULL)) {
+			$count = @mysql_query("SELECT COUNT(*) as count FROM Inventory WHERE (UserID = '$userid' AND IngredientName = '$ingredient') ");
+			$countdata = mysql_fetch_assoc($count);
+			if($countdata['count'] <= 0)
+				return;
+			$invenlist = @mysql_query("SELECT * FROM Inventory WHERE (UserID = '$userid' AND IngredientName = '$ingredient') ");
+			$row = @mysql_fetch_assoc($invenlist);
+			$name = $row['IngredientName'];
+			$qty = $row['Quantity'];
+			$unit = $row['Units'];
+			$array = array();
+			$array = array($qty,$unit,$name);
+			return json_encode($array);
+		}
+	}
 }
 ?>
