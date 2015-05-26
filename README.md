@@ -39,6 +39,7 @@ database.
   
 5) Login as the new user and create a new database:  
   
+    $ cd database
     $ mysql -h localhost -u cs130 -ptest  
 
     mysql> CREATE DATABASE CS130;  
