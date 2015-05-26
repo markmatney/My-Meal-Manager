@@ -159,6 +159,9 @@
         $("#add_button").click(function () {
             $('#add_recipe_popup').popup('show');
         });
+        function select_ingredient(element) {
+            $("." + $(element).data("group")).prop('disabled', !element.checked);
+        }
         function addIngredient() {
             var name = document.createElement('input');
             name.className = "col-xs-4";

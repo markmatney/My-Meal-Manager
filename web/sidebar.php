@@ -1,4 +1,6 @@
 <?php
+    session_start();
+    $uid = $_SESSION["uid"];
     $user = "User";
     $sidebar= array(
         'lists' => array('text'=>'My Lists', 'url'=>'lists.php'),

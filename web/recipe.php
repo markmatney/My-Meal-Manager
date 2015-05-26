@@ -63,8 +63,8 @@
     echo $instr;
     echo '</ol></div>';
 
-    echo '<button type="submit" name="submit-cook" class="btn btn-primary submit-btn">Cook</button>';
-    echo '<button type="submit" name="submit-add-to-grocery" class="btn btn-primary submit-btn">Buy Missing</button>';
+    echo '<button type="submit" name="submit-cook" class="btn btn-success submit-btn">Cook</button>';
+    echo '<button type="submit" name="submit-add-to-grocery" class="btn btn-danger submit-btn">Buy Missing</button>';
     echo '</form>';
 
     if ($root_page == "explore") {
