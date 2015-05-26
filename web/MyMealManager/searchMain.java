@@ -16,8 +16,10 @@ public class searchMain{
 		}
 
 		Recipe[] results = RecipeSearcher.executeSearch(Integer.parseInt(args[0]), testList);
-		for (int i = 0; i < results.length; i++){
-			System.out.println(results[i].getRecipeName());
+		if (results != null){
+			for (int i = 0; i < results.length; i++){
+				System.out.println(results[i].getRecipeName());
+			}
 		}
 	}
 }

@@ -77,7 +77,6 @@ public class RecipeSearcher{
 	}
 	public static Recipe[] getMatchingRecipes(ArrayList<Integer> rids){
 		if (rids == null){
-			System.out.println("No matching recipes found!");
 			return null;
 		}
 		int ridLen = rids.size();
