@@ -56,15 +56,19 @@ public class RecipeSearcher{
 						if (arrToCheck[k] == ridToCheck)
 							ridInAll = true;
 					}			
-					if (!ridInAll)
+					if (ridInAll == false)
 						break; //rid missing from an arr
+					if (j < (ingredMatches.size() - 1)){
+						ridInAll = false;
+					}
 				}
 				if (ingredients.length == 1){ //handle only 
 						//searching 1 ingred
 					ridInAll = true;
 				}
-				if (ridInAll)
+				if (ridInAll == true){
 					ridsWithAllIngred.add(ridToCheck);
+				}
 				ridInAll = false;
 			}
 			return ridsWithAllIngred;
@@ -73,7 +77,6 @@ public class RecipeSearcher{
 	}
 	public static Recipe[] getMatchingRecipes(ArrayList<Integer> rids){
 		if (rids == null){
-			System.out.println("No matching recipes found!");
 			return null;
 		}
 		int ridLen = rids.size();
@@ -135,6 +138,8 @@ public class RecipeSearcher{
 		return null;
 	}
 	public static Recipe[] sortByMissingIngred(int userid, Recipe[] recipes){
+		if (recipes == null || recipes.length <= 1)
+			return recipes;
 		int recipesLen = recipes.length;
 		Connection conn;
 		//create connection to database
