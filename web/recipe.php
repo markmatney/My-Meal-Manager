@@ -72,6 +72,11 @@
         echo '<input type="hidden" name="name" value="'.$recipe_name.'">';
         echo '<button type="submit" id="bookmark_recipe" name="submit" class="btn btn-primary submit-btn">Bookmark</button>';
         echo '</form>';   
+    } else {
+        echo '<form action="removeBookmarkRecipe.php" method="POST">';
+        echo '<input type="hidden" name="name" value="'.$recipe_name.'">';
+        echo '<button type="submit" id="bookmark_recipe" name="submit" class="btn btn-primary submit-btn">Unbookmark</button>';
+        echo '</form>';   
     }
     echo '<button id="close_popup" class="btn btn-default" onclick="close_popup();"><span class="glyphicon glyphicon-remove"></span></button>';
     echo '</span>';
