@@ -1,31 +1,34 @@
 package cs130.project.mmm;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mmdango on 5/8/15.
  */
 public class ExplorePage extends Fragment {
 
-    ListView mExploreGridView;
+    GridView mExploreGridView;
     LinearLayout mSearchBar;
     EditText mSearchQuery;
     ImageButton mSearchButton;
     ArrayAdapter<RecipeRow> mRecipeArrayAdapter;
+    int mUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,47 +38,34 @@ public class ExplorePage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.explore_search_page, container, false);
-        mExploreGridView = (ListView) rootView.findViewById(R.id.explore_listview);
+        mExploreGridView = (GridView) rootView.findViewById(R.id.explore_gridview);
         mSearchBar = (LinearLayout) rootView.findViewById(R.id.search_bar);
         mSearchQuery = (EditText) rootView.findViewById(R.id.search_query);
         mSearchButton = (ImageButton) rootView.findViewById(R.id.enter_search_button);
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SendSearchQuery().execute(mSearchQuery.getText().toString());
+                mRecipeArrayAdapter.clear();
+                mRecipeArrayAdapter.notifyDataSetChanged();
+                sendSearchQuery(mSearchQuery.getText().toString());
             }
         });
-
-        mExploreGridView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Intent toRecipePageIntent = new Intent(getActivity(), RecipePage.class);
-                RecipeRow recipe = mRecipeArrayAdapter.getItem(position);
-                toRecipePageIntent.putExtra("image_url", recipe.getImageURL());
-                toRecipePageIntent.putExtra("recipe_id", recipe.getRecipeId());
-                getActivity().startActivity(toRecipePageIntent);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         return rootView;
-
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new SendSearchQuery().execute(""); //To initially populate gridview
         setHasOptionsMenu(true);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        mUserId = sharedPref.getInt("id", -2);
+
         mRecipeArrayAdapter = new ExploreResultsAdapter(getActivity(), R.layout.explore_listview_item, new ArrayList<RecipeRow>());
 
         mExploreGridView.setAdapter(mRecipeArrayAdapter);
-        testLayout();
+        getExploreResults();
+        //testLayout();
     }
 
     @Override
@@ -84,78 +74,122 @@ public class ExplorePage extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    private void getExploreResults() {
+        String url = getResources().getString(R.string.api) + "search.php";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("id", String.valueOf(mUserId));
+        params.put("ingredients", "");
+
+        CustomRequest jsObjRequest = new CustomRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray recipes = response.getJSONArray("recipes");
+                    for (int i = 0 ;i < recipes.length(); i++) {
+                        getRecipeInfo(recipes.getString(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError response) {
+                Log.d("Response: ", response.toString());
+            }
+        });
+        APIHelper.getInstance(getActivity()).addToRequestQueue(jsObjRequest);
+    }
+
+    private void sendSearchQuery(String query) {
+        String url = getResources().getString(R.string.api) + "search.php";
+        String[] items = query.split(",");
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("id", String.valueOf(mUserId));
+        String ingredients = "";
+        for (String item : items) {
+            if (item.equals("")) {
+                continue;
+            }
+            ingredients += " \"" + item.trim() + '"';
+        }
+        params.put("ingredients", ingredients);
+
+        CustomRequest jsObjRequest = new CustomRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray recipes = response.getJSONArray("recipes");
+                    for (int i = 0 ;i < recipes.length(); i++) {
+                        getRecipeInfo(recipes.getString(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError response) {
+                Log.d("Response: ", response.toString());
+            }
+        });
+        APIHelper.getInstance(getActivity()).addToRequestQueue(jsObjRequest);
+    }
+
     public void testLayout() {
-        mRecipeArrayAdapter.add(new RecipeRow(0, "Cheese balls", "http://creamcentre.com/files/9913/6057/0117/cheese_corn_balls.jpg"));
-        mRecipeArrayAdapter.add(new RecipeRow(1, "Pizza", "http://uncletonysnypizza.com/wp-content/uploads/2012/10/pep_pizza_BIG.jpg"));
-        mRecipeArrayAdapter.add(new RecipeRow(2, "Spaghetti", "http://divinehealthyfood.com/wp-content/uploads/2014/01/Vegan_Spaghetti_Bolognese_Recipe_001.jpg"));
+        //mRecipeArrayAdapter.add(new RecipeRow(0, "Cheese balls", "http://creamcentre.com/files/9913/6057/0117/cheese_corn_balls.jpg"));
+        //mRecipeArrayAdapter.add(new RecipeRow(1, "Pizza", "http://uncletonysnypizza.com/wp-content/uploads/2012/10/pep_pizza_BIG.jpg"));
+        //mRecipeArrayAdapter.add(new RecipeRow(2, "Spaghetti", "http://divinehealthyfood.com/wp-content/uploads/2014/01/Vegan_Spaghetti_Bolognese_Recipe_001.jpg"));
 
         mRecipeArrayAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+    public void getRecipeInfo(String recipeName) {
+        recipeName = recipeName.replace(" ", "%20");
+        String url = getResources().getString(R.string.api) + "get_recipe.php?recipe_name=" + recipeName;
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+        CustomRequest jsObjRequest = new CustomRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String recipeName = response.getString("recipe_name");
+                    String recipeURL = response.getString("url");
+                    String imageURL = response.getString("image_url");
+                    String cookTime = response.getString("time");
+                    String instructions = response.getString("instructions");
+                    JSONArray JSONIngredients = response.getJSONArray("ingredients");
+                    ArrayList<IngredientRow> ingredients = new ArrayList<IngredientRow>();
+                    for (int i = 0; i < JSONIngredients.length(); i++) {
+                        JSONObject ing = JSONIngredients.getJSONObject(i);
+                        String ingredientName = ing.getString("name");
+                        String units = ing.getString("units");
+                        double quantity = ing.getDouble("quantity");
+                        ingredients.add(new IngredientRow(ingredientName, quantity, units));
 
-    private class SendSearchQuery extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            String query = params[0];
-            BufferedReader rd  = null;
-            StringBuilder sb = null;
-            String line = null;
-            try {
-                URL url = new URL("");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-                rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                sb = new StringBuilder();
+                    }
+                    mRecipeArrayAdapter.add(new RecipeRow(recipeName, imageURL, ingredients, instructions, recipeURL, cookTime));
+                    mRecipeArrayAdapter.notifyDataSetChanged();
 
-                while ((line = rd.readLine()) != null)
-                {
-                    sb.append(line + '\n');
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                //return sb.toString();
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        }, new Response.ErrorListener() {
 
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
-
-        @Override
-        protected void onCancelled(Void aVoid) {
-            super.onCancelled(aVoid);
-        }
+            @Override
+            public void onErrorResponse(VolleyError response) {
+                Log.d("Response: ", response.toString());
+            }
+        });
+        APIHelper.getInstance(getActivity()).addToRequestQueue(jsObjRequest);
     }
+
 }

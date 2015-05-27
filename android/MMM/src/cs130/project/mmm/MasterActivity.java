@@ -2,27 +2,46 @@ package cs130.project.mmm;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.*;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by mmdango on 5/8/15.
  */
 public class MasterActivity extends Activity {
 
+    private static int mUserId;
     private boolean isEditing = false;
     private LinearLayout mBackground;
+    private static Timer mPeriodicUpdates;
+
+    private static GroceryList mGroceryList;
+    private static InventoryList mInventory;
+    private static String API_URL;
+    private static Context mContext;
+    private static boolean mTimerStarted = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.master_layout);
+
+
         mBackground = (LinearLayout) findViewById(R.id.background);
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -33,20 +52,143 @@ public class MasterActivity extends Activity {
                 .setTabListener(new TabListener<GroceryList>(
                         this, "grocery_list", GroceryList.class));
         actionBar.addTab(groceryListTab);
-
         ActionBar.Tab inventoryListTab = actionBar.newTab()
                 .setText(R.string.inventory)
                 .setTabListener(new TabListener<InventoryList>(
                         this, "inventory_list", InventoryList.class));
         actionBar.addTab(inventoryListTab);
 
-        ActionBar.Tab ExploreTab = actionBar.newTab()
+        ActionBar.Tab exploreTab = actionBar.newTab()
                 .setText(R.string.explore_page)
                 .setTabListener(new TabListener<ExplorePage>(
                         this, "explore_tab", ExplorePage.class));
-        actionBar.addTab(ExploreTab);
+        actionBar.addTab(exploreTab);
+
+        ActionBar.Tab profileTab = actionBar.newTab()
+                .setText(R.string.profile_page)
+                .setTabListener(new TabListener<ProfilePage>(
+                        this, "profile_tab", ProfilePage.class));
+        actionBar.addTab(profileTab);
+
+        API_URL = getResources().getString(R.string.api);
+        mContext = getApplicationContext();
+        startUpdater();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mGroceryList = (GroceryList) getFragmentManager().findFragmentByTag("grocery_list");
+        mInventory = (InventoryList) getFragmentManager().findFragmentByTag("inventory_list");
+        setUserId();
+        startUpdater();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopUpdater();
+    }
 
 
+    public static void startUpdater() {
+        if (mTimerStarted) {
+            return;
+        }
+        mTimerStarted = true;
+        mPeriodicUpdates = new Timer();
+        mPeriodicUpdates.schedule(new TimerTask() {
+
+            public void run() {
+                fetchGroceryList(mUserId);
+                fetchInventory(mUserId);
+            }
+        }, 5000);
+    }
+
+    public static void stopUpdater() {
+        if (!mTimerStarted) {
+            return;
+        }
+        mTimerStarted = false;
+        mPeriodicUpdates.cancel();
+    }
+
+    private static void fetchGroceryList(int id) {
+        String url = API_URL + "get_grocery.php?" + "id=" + String.valueOf(id);
+
+        CustomRequest jsObjRequest = new CustomRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray groceryItems = response.getJSONArray("items");
+                    SQLiteDatabaseHelper.getInstance(mContext).loadIntoGroceryList(groceryItems);
+                    if (mGroceryList != null) {
+                        mGroceryList.syncList();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError response) {
+                Log.d("Response: ", response.toString());
+            }
+        });
+        APIHelper.getInstance(mContext).addToRequestQueue(jsObjRequest);
+    }
+
+    private static void fetchInventory(int id) {
+        String url = API_URL + "get_inventory.php?" + "id=" + String.valueOf(id);
+
+        CustomRequest jsObjRequest = new CustomRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray inventoryItems = response.getJSONArray("items");
+                    SQLiteDatabaseHelper.getInstance(mContext).loadIntoInventory(inventoryItems);
+                    if (mInventory != null) {
+                        mInventory.syncList();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError response) {
+                Log.d("Response: ", response.toString());
+            }
+        });
+        APIHelper.getInstance(mContext).addToRequestQueue(jsObjRequest);
+    }
+
+    void setUserId() {
+        Intent info = getIntent();
+        mUserId = info.getIntExtra("id", -1);
+
+        SharedPreferences sharedPref = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        int storedId = sharedPref.getInt("id", -2);
+        if (storedId == -2) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("id", mUserId);
+            editor.commit();
+        }
+        if (mUserId == -1) {
+            mUserId = storedId;
+        }
+        fetchGroceryList(mUserId);
+        fetchInventory(mUserId);
     }
 
     @Override
@@ -111,6 +253,5 @@ public class MasterActivity extends Activity {
         public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
             // User selected the already selected tab. Usually do nothing.
         }
-
     }
 }

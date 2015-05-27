@@ -25,10 +25,10 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal"/>
     </LinearLayout>
-    <ListView
+    <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/explore_listview"
+            android:id="@+id/explore_gridview"
             android:layout_gravity="center_horizontal"
             android:numColumns="2"/>
 </LinearLayout>

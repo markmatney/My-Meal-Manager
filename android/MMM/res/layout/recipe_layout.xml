@@ -3,43 +3,80 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/scrollView"
-            android:layout_weight="0.8"
+            android:layout_weight="0.4"
             android:layout_gravity="center_horizontal">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/recipe_image"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher"/>
-            <ListView
-                    android:id="@+id/ingredients_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-            </ListView>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:id="@+id/recipe_title"
+                    />
+            <com.android.volley.toolbox.NetworkImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recipe_image"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    android:minHeight="180dp"
+                    android:src="@drawable/ic_launcher"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
                     android:text="Directions for cooking:"
                     android:id="@+id/recipe_instructions" />
         </LinearLayout>
 
     </ScrollView>
-    <Button
-            android:id="@+id/select_recipe_button"
+    <ListView
+            android:id="@+id/ingredients_listview"
+            android:paddingTop="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="Choose this recipe!"
-            />
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content">
+
+    </ListView>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+        <ImageButton
+                android:id="@+id/add_missing_items_button"
+                android:layout_width="wrap_content"
+                android:padding="2dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:background="@drawable/red_selector"
+                android:src="@drawable/add_to_grocery_list_icon"
+                />
+        <ImageButton
+                android:id="@+id/bookmark_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:background="@drawable/blue_selector"
+                android:src="@drawable/bookmark_icon"
+                />
+        <ImageButton
+                android:id="@+id/choose_recipe_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_weight="1.4"
+                android:background="@drawable/green_selector"
+                android:src="@drawable/cook_icon"
+                />
+    </LinearLayout>
+
 </LinearLayout>

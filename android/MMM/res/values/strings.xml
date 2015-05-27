@@ -4,8 +4,10 @@
     <string name="grocery_list">Grocery List</string>
     <string name="inventory">Inventory</string>
     <string name="explore_page">Explore</string>
+    <string name="profile_page">Profile Page</string>
     <string name="recipes">Recipes</string>
     <string name="search_hint">Enter ingredients you want to use!</string>
     <string name="image_url">image_url</string>
-
+    <string name="api">http://10.0.3.2/API/REST_API/</string>
+    
 </resources>

@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:background="@android:color/holo_red_dark"
-              android:layout_gravity="right"
+              android:layout_gravity="right|center_horizontal"
               android:layout_height="match_parent">
 
     <TextView
@@ -12,5 +12,5 @@
             android:textSize="30dp"
             android:text="Delete"
             android:id="@+id/textView"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right|center_horizontal"/>
 </LinearLayout>

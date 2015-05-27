@@ -16,5 +16,9 @@
         <activity android:name=".MasterActivity"
                   android:label="@string/app_name">
         </activity>
+        <activity android:name=".RecipePage"
+                  android:label="@string/app_name">
+        </activity>
+
     </application>
 </manifest>

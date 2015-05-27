@@ -22,6 +22,11 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
     private SQLiteDatabaseHelper mItemsDBHelper;
     private boolean isEditing = false;
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setUpGroceryList(view);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,7 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.grocery_list_listview, container, false);
+        return inflater.inflate(R.layout.listview_background, container, false);
 
     }
 
@@ -75,10 +80,11 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
         mGroceryListAdapter.setSwipeActionListener(this);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setUpGroceryList(view);
+    public void syncList() {
+        mRegularListAdapter.clear();
+        mRegularListAdapter.addAll(mItemsDBHelper.getGroceryList());
+        mRegularListAdapter.notifyDataSetChanged();
+        mGroceryListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -107,7 +113,7 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
                     return;
                 }
 
-                ItemRow newRow = new ItemRow(nameText.getText().toString(),
+                IngredientRow newRow = new IngredientRow(nameText.getText().toString(),
                         Double.parseDouble(quantityText.getText().toString()),
                         unitText.getText().toString());
                 mRegularListAdapter.add(newRow);
@@ -158,7 +164,7 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
             int direction = directionList[i];
             int position = positionList[i];
             String dir = "";
-            final ItemRow item;
+            final IngredientRow item;
             switch (direction) {
                 case SwipeDirections.DIRECTION_FAR_RIGHT:
                 case SwipeDirections.DIRECTION_NORMAL_RIGHT:
@@ -169,7 +175,7 @@ public class GroceryList extends ListFragment implements SwipeActionAdapter.Swip
                                 public void onClick(DialogInterface dialog, int which) {
                                     mItemsDBHelper.moveToInventory(item.getName().toString());
                                     for (int i = 0; i < getListView().getCount(); i++) {
-                                        ItemRow row = mRegularListAdapter.getItem(i);
+                                        IngredientRow row = mRegularListAdapter.getItem(i);
                                         if (row.getName().equals(item.getName())) {
                                             mRegularListAdapter.remove(row);
                                             mRegularListAdapter.notifyDataSetChanged();

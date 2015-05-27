@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+        android:id="@+id/inventory_item_background"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="6dip"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+        <TextView
+                android:id="@+id/name_text"
+                android:layout_gravity="center"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Ingredient Name"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+        <EditText
+                android:id="@+id/quantity_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:editable="true"
+                android:focusable="true"
+                android:layout_toEndOf="@+id/name_text"/>
+
+        <TextView
+                android:id="@+id/unit_text"
+                android:text="oz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/quantity_text"/>
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/have_ingredient_checkbox"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/unit_text"/>
+        <TextView
+                android:id="@+id/warning_textview"
+                android:layout_width="match_parent"
+                android:background="#FFFF0000"
+                android:layout_height="wrap_content"
+                android:text="Cannot convert units"
+                android:visibility="invisible"
+                android:layout_below="@+id/quantity_text"
+                android:layout_toStartOf="@+id/quantity_text"/>
+</RelativeLayout>

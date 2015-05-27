@@ -28,7 +28,7 @@ public class InventoryList extends ListFragment implements SwipeActionAdapter.Sw
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.grocery_list_listview, container, false);
+        return inflater.inflate(R.layout.listview_background, container, false);
     }
 
     @Override
@@ -63,6 +63,12 @@ public class InventoryList extends ListFragment implements SwipeActionAdapter.Sw
         return false;
     }
 
+    public void syncList() {
+        mRegularListAdapter.clear();
+        mRegularListAdapter.addAll(mItemsDBHelper.getInventory());
+        mRegularListAdapter.notifyDataSetChanged();
+        mInventoryListAdapter.notifyDataSetChanged();
+    }
 
     private void setUpInventory(final View view) {
         ListView inventoryListView = getListView();
@@ -89,7 +95,7 @@ public class InventoryList extends ListFragment implements SwipeActionAdapter.Sw
                     return;
                 }
 
-                ItemRow newRow = new ItemRow(nameText.getText().toString(),
+                IngredientRow newRow = new IngredientRow(nameText.getText().toString(),
                         Double.parseDouble(quantityText.getText().toString()),
                         unitText.getText().toString());
                 mRegularListAdapter.add(newRow);
@@ -148,16 +154,32 @@ public class InventoryList extends ListFragment implements SwipeActionAdapter.Sw
         for(int i=0;i<positionList.length;i++) {
             int direction = directionList[i];
             int position = positionList[i];
-            final ItemRow item;
+            final IngredientRow item;
             switch (direction) {
                 case SwipeDirections.DIRECTION_FAR_LEFT:
                 case SwipeDirections.DIRECTION_NORMAL_LEFT:
-                    item = (ItemRow) mInventoryListAdapter.getItem(position-1);
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle("Add to Grocery List")
+                    item = (IngredientRow) mInventoryListAdapter.getItem(position-1);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+                    LayoutInflater inflater= getActivity().getLayoutInflater();
+                    //this is what I did to added the layout to the alert dialog
+                    View layout=inflater.inflate(R.layout.alert_dialog_edit_text,null);
+                    alert.setView(layout);
+                    final EditText quantityText = (EditText) layout.findViewById(R.id.to_grocery_quantity);
+                    final EditText unitsText = (EditText) layout.findViewById(R.id.to_grocery_units);
+                    quantityText.setText(String.valueOf(item.getQuantity()));
+                    unitsText.setText(item.getUnit());
+
+                    alert.setTitle("Add to Grocery List")
+                            .setMessage(item.getName())
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mItemsDBHelper.addToGrocery(item.getName().toString(), item.getQuantity());
+                                    if (quantityText.getText().toString().equals("") || unitsText.getText().toString().equals("")) {
+                                        return;
+                                    }
+                                    double quantity = Double.parseDouble(quantityText.getText().toString());
+                                    String units = unitsText.getText().toString();
+                                    mItemsDBHelper.addToGrocery(item.getName().toString(), quantity, units);
 
                                 }
                             })
@@ -165,7 +187,7 @@ public class InventoryList extends ListFragment implements SwipeActionAdapter.Sw
                     break;
                 case SwipeDirections.DIRECTION_FAR_RIGHT:
                 case SwipeDirections.DIRECTION_NORMAL_RIGHT:
-                    item = (ItemRow) mInventoryListAdapter.getItem(position-1);
+                    item = (IngredientRow) mInventoryListAdapter.getItem(position-1);
                     mItemsDBHelper.deleteFromInventory(item);
                     mRegularListAdapter.remove(item);
                     mRegularListAdapter.notifyDataSetChanged();

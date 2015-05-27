@@ -6,23 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 
 import java.util.List;
 
-public class InventoryListAdapter extends ArrayAdapter<ItemRow> {
+public class InventoryListAdapter extends ArrayAdapter<IngredientRow> {
 
     Context mContext;
     int mResourceId;
 
-    public InventoryListAdapter(Context context, int layoutResourceId, List<ItemRow> data) {
+    public InventoryListAdapter(Context context, int layoutResourceId, List<IngredientRow> data) {
         super(context, layoutResourceId, data);
         this.mResourceId = layoutResourceId;
         this.mContext = context;
     }
 
     @Override
-    public void remove(ItemRow object) {
+    public void remove(IngredientRow object) {
         super.remove(object);
     }
 
@@ -44,7 +43,7 @@ public class InventoryListAdapter extends ArrayAdapter<ItemRow> {
             holder = (ItemRowHolder) row.getTag();
         }
 
-        ItemRow item = getItem(position);
+        IngredientRow item = getItem(position);
         holder.nameBox.setText(item.getName());
         holder.quantityBox.setText(Double.toString(item.getQuantity()));
         holder.unitBox.setText(item.getUnit());
