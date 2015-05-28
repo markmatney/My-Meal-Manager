@@ -1,12 +1,18 @@
 /*
- * createTables.sql
+ * cleanDB.sql
  *
- * Creates each of the application database's tables.
+ * Drops the CS130 database, then create a new (empty) database of the same name.
  *
- * Usage:  mysql> SOURCE createTables.sql;
+ * Usage:  mysql> SOURCE cleanDB.sql;
+ *
+ * Author: Mark Matney
  */
 
+DROP DATABASE CS130;
+CREATE DATABASE CS130;
+
 USE CS130;
+
 CREATE TABLE Recipes(
 	RecipeID INT NOT NULL AUTO_INCREMENT,
 	RecipeName VARCHAR(100) NOT NULL,

@@ -1,3 +1,11 @@
+/*
+ * drop.sql
+ *
+ * Drops all of the application database's tables.
+ *
+ * Usage:  mysql> SOURCE drop.sql;
+ */
+
 USE CS130;
 DROP TABLE GroceryList ;
 DROP TABLE Inventory ;
