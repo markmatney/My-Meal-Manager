@@ -55,7 +55,7 @@
         <div id="lists" class="container-fluid">
             <div id="grocery">
                 <h2>Grocery List</h2><hr>
-                <ul class="sortable" id="grocery-list">
+                <ul class="sortable_list" id="grocery-list">
                     <?php 
                         $grocery_list = json_decode($api->getGrocery($uid));
                         foreach ($grocery_list as $item) {
@@ -85,7 +85,7 @@
             </div>
             <div id="inventory">
                 <h2>Inventory</h2><hr>
-                <ul class="sortable" id="inventory-list">
+                <ul class="sortable_list" id="inventory-list">
                     <?php 
                         $inventory_list = json_decode($api->getInventory($uid));
                         foreach ($inventory_list as $item) {
@@ -150,8 +150,8 @@
     });
 
     $(document).ready(function () {
-      $('div#lists').find('ul.sortable').sortable({
-        connectWith: 'ul.sortable',
+      $('div#lists').find('.sortable_list').sortable({
+        connectWith: '.sortable_list',
         remove: function(event,ui) {
             var list1 = $( this ).attr('id');
             var name = ui.item.find('.item-name');

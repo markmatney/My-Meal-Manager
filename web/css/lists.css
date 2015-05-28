@@ -8,6 +8,9 @@ ul {
 	padding: 0px;
 	margin: 0px;
 }
+.sortable_list {
+	padding: 0px 0px 10px 0px ;
+}
 #wrapper {
 	overflow: hidden;
 }

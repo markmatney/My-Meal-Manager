@@ -4,7 +4,7 @@
     session_start();
     $uid = $_SESSION["uid"];
 
-    header('Location: lists.php');
+    header('Location: my_recipes.php');
 
     if (isset($_POST['submit-cook'])) {
         $ingredients = $_POST["ingredient-name"];
