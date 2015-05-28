@@ -44,7 +44,7 @@ a, a:hover{
     margin-right: auto;
     margin-left: auto; 
     border-radius: 5px;
-    max-height: 175px;
+    max-height: 150px;
 }
 .popup_open {
     background-color: transparent;
