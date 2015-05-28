@@ -62,7 +62,7 @@ class databaseAPI {
 		}		
 	}
 	
-	/* checkIfValudUser
+	/* checkIfValidUser
 	
 	Takes in username,password and returns true if correct match,
 	false otherwise.
@@ -528,8 +528,9 @@ class databaseAPI {
 	sorted by number of ingreds the recipe requires that aren't in 
 	the given user's inventory or grocery list
 
-	Input: (int userid, String[] ingredients) 
-	Ouput: a JSON array with the format 
+	Input: (int userid, String[] ingredients) (note - each ingredient in 
+		the array should have its name enclosed with quotes)
+	Output: a JSON array with the format 
 		["<RecipeName1>", "<RecipeName2>", ... ]
 
 	*/
