@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://mymealmanager.site/" />
+<title>test_case10</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">test_case10</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/my_recipes.php</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=name</td>
+	<td>Berries and White Chocolate Mousse</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=img</td>
+	<td>http://www.recipe.com/images/berries-and-white-chocolate-mousse-R119171-ss.jpg</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=time</td>
+	<td>03:10:00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=ingredient-name[]</td>
+	<td>sugar</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=quantity[]</td>
+	<td>0.75</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=units[]</td>
+	<td>cup</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_ingredient</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='ingredient-name[]'])[2]</td>
+	<td>large egg yolks</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='quantity[]'])[2]</td>
+	<td>6</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='units[]'])[2]</td>
+	<td>units</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_ingredient</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='ingredient-name[]'])[3]</td>
+	<td>white chocolate, melted</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='quantity[]'])[3]</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='units[]'])[3]</td>
+	<td>ounces</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_ingredient</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='ingredient-name[]'])[4]</td>
+	<td>vanilla extract</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='quantity[]'])[4]</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='units[]'])[4]</td>
+	<td>teaspoons</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_ingredient</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='ingredient-name[]'])[5]</td>
+	<td>heavy cream</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='quantity[]'])[5]</td>
+	<td>1.66</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='units[]'])[5]</td>
+	<td>cups</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=add_ingredient</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='ingredient-name[]'])[6]</td>
+	<td>assorted fresh raspberries, blackberries, marionberries and boysenberries</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='quantity[]'])[6]</td>
+	<td>4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>xpath=(//input[@name='units[]'])[6]</td>
+	<td>cups</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=instructions</td>
+	<td>test instructions</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit-edit</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
