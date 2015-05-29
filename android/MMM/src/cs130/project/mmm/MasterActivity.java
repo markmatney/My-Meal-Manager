@@ -41,7 +41,6 @@ public class MasterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.master_layout);
 
-
         mBackground = (LinearLayout) findViewById(R.id.background);
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -102,8 +101,8 @@ public class MasterActivity extends Activity {
         mPeriodicUpdates.schedule(new TimerTask() {
 
             public void run() {
-                fetchGroceryList(mUserId);
-                fetchInventory(mUserId);
+                fetchGroceryList();
+                fetchInventory();
             }
         }, 5000);
     }
@@ -116,8 +115,8 @@ public class MasterActivity extends Activity {
         mPeriodicUpdates.cancel();
     }
 
-    private static void fetchGroceryList(int id) {
-        String url = API_URL + "get_grocery.php?" + "id=" + String.valueOf(id);
+    private static void fetchGroceryList() {
+        String url = API_URL + "get_grocery.php?" + "id=" + String.valueOf(mUserId);
 
         CustomRequest jsObjRequest = new CustomRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -144,8 +143,8 @@ public class MasterActivity extends Activity {
         APIHelper.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    private static void fetchInventory(int id) {
-        String url = API_URL + "get_inventory.php?" + "id=" + String.valueOf(id);
+    private static void fetchInventory() {
+        String url = API_URL + "get_inventory.php?" + "id=" + String.valueOf(mUserId);
 
         CustomRequest jsObjRequest = new CustomRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -175,20 +174,12 @@ public class MasterActivity extends Activity {
     void setUserId() {
         Intent info = getIntent();
         mUserId = info.getIntExtra("id", -1);
-
-        SharedPreferences sharedPref = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
-
-        int storedId = sharedPref.getInt("id", -2);
-        if (storedId == -2) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt("id", mUserId);
-            editor.commit();
+        Intent testIntent = getIntent();
+        if (testIntent.getBooleanExtra("testing", false)) {
+            mUserId = testIntent.getIntExtra("test_id", mUserId);
         }
-        if (mUserId == -1) {
-            mUserId = storedId;
-        }
-        fetchGroceryList(mUserId);
-        fetchInventory(mUserId);
+        fetchGroceryList();
+        fetchInventory();
     }
 
     @Override

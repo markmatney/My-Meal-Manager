@@ -31,6 +31,20 @@ public class RecipeRow implements Parcelable {
         mCookTime = cookTime;
     }
 
+    public RecipeRow (String recipeName) {
+        mRecipeName = recipeName;
+    }
+
+    public void setEverything(String recipeName, String imageURL, List<IngredientRow> ingredients, String instructions, String recipeURL, String cookTime) {
+        mRecipeName = recipeName;
+        mImageURL = imageURL;
+        mIngredients = ingredients;
+        mNumberIngredients = mIngredients.size();
+        mInstructions = instructions;
+        mRecipeURL = recipeURL;
+        mCookTime = cookTime;
+    }
+
     public String getImageURL() {
         return mImageURL;
     }

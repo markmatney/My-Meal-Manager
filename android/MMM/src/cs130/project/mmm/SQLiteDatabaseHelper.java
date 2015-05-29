@@ -269,7 +269,9 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     public int haveInInventory(String name, double quantity, String units) {
         MasterActivity.stopUpdater();
-
+        if (units.charAt(units.length()-1) == 's') {
+            units = units.substring(0, units.length()-1);
+        }
         SQLiteDatabase db = getReadableDatabase();
         name = name.toLowerCase();
         units = units.toLowerCase();
@@ -284,8 +286,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
             invenQuantity = cursor.getDouble(1);
             invenUnits = cursor.getString(2);
         } else {
-
             return -1;
+        }
+        if (invenUnits.charAt(invenUnits.length()-1) == 's') {
+            invenUnits = invenUnits.substring(0, invenUnits.length() - 1);
         }
 
         double conversionRate1 = APIHelper.volumeConversionRate(units);
@@ -473,7 +477,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
             @Override
             public void onErrorResponse(VolleyError response) {
-                Toast.makeText(mContext, "Error updating database", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Error updating database", Toast.LENGTH_SHORT).show();
 
                 Log.d("Response: ", response.toString());
             }

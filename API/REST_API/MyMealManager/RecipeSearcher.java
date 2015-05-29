@@ -10,7 +10,7 @@ import java.sql.Statement;
 public class RecipeSearcher{
 	public static ArrayList<Integer> getRids(Ingredient[] ingredients){	
 		//get all rids that use one+ of the ingredients
-		String queryBase = "SELECT Recipe FROM Ingredients WHERE IngredientName LIKE '";
+		String queryBase = "SELECT Recipe FROM Ingredients WHERE IngredientName LIKE '%";
 		int ingredLen = ingredients.length;
 		ArrayList<int[]>/*<ResultSet>*/ ingredMatches = 
                                               new ArrayList<int[]>();
@@ -22,7 +22,7 @@ public class RecipeSearcher{
 
 		for (int i = 0; i < ingredLen; i++){
 			ResultSet rs = 
-			conn.createStatement().executeQuery(queryBase + ingredients[i].getIngredName() + "'");
+			conn.createStatement().executeQuery(queryBase + ingredients[i].getIngredName() + "%'");
 			if (rs != null && rs.last()){
 				int rsCount = rs.getRow();
 				rs.beforeFirst();

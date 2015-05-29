@@ -5,10 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.util.List;
 
@@ -44,6 +41,12 @@ public class IngredientsListAdapter extends ArrayAdapter<IngredientRow> {
             holder.unitBox = (TextView) row.findViewById(R.id.unit_text);
             holder.checkBox = (CheckBox) row.findViewById(R.id.have_ingredient_checkbox);
             holder.checkBox.setChecked(false);
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    item.setChecked(isChecked);
+                }
+            });
             holder.warningBox = (TextView) row.findViewById(R.id.warning_textview);
             row.setTag(holder);
         } else {
@@ -67,8 +70,11 @@ public class IngredientsListAdapter extends ArrayAdapter<IngredientRow> {
                 holder.warningBox.setText("Not enough quantity");
                 holder.warningBox.setVisibility(View.VISIBLE);
                 holder.nameBox.setBackgroundColor(0xFF009900);
-                holder.checkBox.setChecked(false);
-                item.setChecked(false);
+                if (item.isChecked()) {
+                    holder.checkBox.setChecked(true);
+                } else {
+                    holder.checkBox.setChecked(false);
+                }
                 break;
             case 2:
                 holder.warningBox.setText("Cannot convert units");

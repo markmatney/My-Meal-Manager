@@ -57,12 +57,10 @@ public class ExplorePage extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         mUserId = sharedPref.getInt("id", -2);
 
         mRecipeArrayAdapter = new ExploreResultsAdapter(getActivity(), R.layout.explore_listview_item, new ArrayList<RecipeRow>());
-
         mExploreGridView.setAdapter(mRecipeArrayAdapter);
         getExploreResults();
         //testLayout();
@@ -125,6 +123,7 @@ public class ExplorePage extends Fragment {
                 try {
                     JSONArray recipes = response.getJSONArray("recipes");
                     for (int i = 0 ;i < recipes.length(); i++) {
+                        //mRecipeArrayAdapter.add(new RecipeRow(recipes.getString(i)));
                         getRecipeInfo(recipes.getString(i));
                     }
                 } catch (JSONException e) {
@@ -174,6 +173,12 @@ public class ExplorePage extends Fragment {
                         ingredients.add(new IngredientRow(ingredientName, quantity, units));
 
                     }
+                    /*
+                    for(int i = 0; i < mRecipeArrayAdapter.getCount(); i++) {
+                        if (mRecipeArrayAdapter.getItem(i).getRecipeName().equals(recipeName))) {
+                            mRecipeArrayAdapter.getItem(i).setEverything(recipeName, imageURL, ingredients, instructions, recipeURL, cookTime);
+                        }
+                    }*/
                     mRecipeArrayAdapter.add(new RecipeRow(recipeName, imageURL, ingredients, instructions, recipeURL, cookTime));
                     mRecipeArrayAdapter.notifyDataSetChanged();
 

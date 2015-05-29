@@ -104,6 +104,7 @@ public class RecipePage extends Activity {
                                         SQLiteDatabaseHelper.getInstance(RecipePage.this).takeFromInventoryRow(curItem.getName(), curItem.getQuantity());
                                     }
                                 }
+                                mIngredientsListAdapter.notifyDataSetChanged();
                             }
                         })
                         .show();

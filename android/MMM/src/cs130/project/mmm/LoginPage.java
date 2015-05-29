@@ -35,6 +35,7 @@ public class LoginPage extends Activity {
     Boolean mIsLogin = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         int storedId = sharedPref.getInt("id", -2);
         if (storedId != -2) {
@@ -42,8 +43,8 @@ public class LoginPage extends Activity {
             String username = sharedPref.getString("username", "");
             String password = sharedPref.getString("password", "");
             loginUser(username, password);
+            return;
         }
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page_layout);
         mSampleImages = (ViewAnimator) findViewById(R.id.sample_images);
         mEmailAddress = (EditText) findViewById(R.id.register_email);
@@ -127,6 +128,7 @@ public class LoginPage extends Activity {
                             SharedPreferences.Editor editor = sp.edit();
                             editor.putString("username", username);
                             editor.putString("password", password);
+                            editor.putInt("id", id);
                             editor.commit();
                             Intent toMasterActivity = new Intent(getApplicationContext(), MasterActivity.class);
                             toMasterActivity.putExtra("id", id);
@@ -155,7 +157,7 @@ public class LoginPage extends Activity {
         APIHelper.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
-    private void registerUser(String username, String password) {
+    private void registerUser(final String username, final String password) {
         String url = getResources().getString(R.string.api) + "register.php";
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", username);
@@ -171,6 +173,12 @@ public class LoginPage extends Activity {
                     switch(code) {
                         case 0:
                             int id = response.getInt("id");
+                            SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("username", username);
+                            editor.putString("password", password);
+                            editor.putInt("id", id);
+                            editor.commit();
                             Intent toMasterActivity = new Intent(getApplicationContext(), MasterActivity.class);
                             toMasterActivity.putExtra("id", id);
                             startActivity(toMasterActivity);
