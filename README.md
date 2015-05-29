@@ -53,19 +53,19 @@ database.
 
     mysql> CREATE DATABASE CS130;  
   
-6) Build the table schema and initialize the database with 'createTables.sql' 
-and 'initializeDB.sql', both in the 'database' folder.  
+6) Build the table schema and initialize the database with 'createTables.sql' and 'initializeDB.sql', both in the 'database'   
+folder.  
   
-    mysql> SOURCE createTables.sql;  
+    mysql> SOURCE createTables.sql;
     mysql> SOURCE initializeDB.sql;  
-    mysql> exit;  
-  
+    mysql> exit  
+    
 7) To access the website, replace "user" with your system username:  
   
     $ google-chrome http://localhost/~user/web/   
     $ firefox http://localhost/~user/web/  
   
-9) To build the Android application:
+8) To build the Android application:
     Open IntelliJ and select Import Project
     Select the folder CS130/android/MMM
     Select Create project from existing sources.
