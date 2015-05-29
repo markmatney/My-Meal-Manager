@@ -8,8 +8,8 @@
  *   Ken Ohhashi
  *
  * Usage:
- *   1) compile: bash$> javac RecipeSQLGen.java
- *   2) run:     bash$> java Main recipes database nextrecipeid
+ *   1) compile: $ javac RecipeSQLGen.java
+ *   2) run:     $ java Main recipes database nextrecipeid
  * 
  * Input:
  *   1) recipes: a text file containing a variable-length list of
@@ -21,7 +21,7 @@
  *         database. The output can then be redirected to a file with >, or piped to
  *         other utilities, such as mysql, with |.
  *
- *         $> java Main recipes [DATABASE] [NEXTRECIPEID] | mysql -h localhost -u [USER] -p[PASS]
+ *         $ java Main recipes [DATABASE] [NEXTRECIPEID] | mysql -h localhost -u [USER] -p[PASS]
  */
 
 import java.io.*;
@@ -45,6 +45,8 @@ class Main
     ArrayList<String> recipes = new ArrayList<String>();    
     FileInputStream f;
     int recipeid;
+
+    // Use argv[2] as the next primary key, or 1 if omitted.
     if (argv.length == 3)
     {
       recipeid = Integer.valueOf(argv[2]);
@@ -57,7 +59,6 @@ class Main
     // Parse the file given by argv[0], and store in ArrayList recipes.
     try {
       // parse recipes file
-
       f = new FileInputStream(argv[0]);
       while ((i = f.read()) != -1)
       {
@@ -91,8 +92,7 @@ class Main
       throw e;
     }
 
-    // Iterate over the elements of ArrayList (may want to replace with loop to exploit parallelism).
-    // However, with iterator, can safely traverse list without knowing length. Good API.
+    // Iterate over the elements of ArrayList
     Iterator<String> it = recipes.iterator();
     while (it.hasNext())
     {
@@ -104,13 +104,13 @@ class Main
       query += subquery + "\n\n";
     }
 
+    // Print the resulting SQL query.
     System.out.println(query);
   }
 }
 
 abstract class Recipe
 {
-  // members
   protected String searchedname;
   protected String name;
   protected String url;
@@ -120,17 +120,14 @@ abstract class Recipe
   protected ArrayList<String> instructions;
   protected Document dom;
 
-  // functions
-
   public Recipe(String n)
   {
     searchedname = n;
   }
 
-  // converts INSTRUCTIONS TO STRING!!
   public String instructionsToString()
   {  
-    String ret = "";//"Recipe:\n\turl: " + url + "\n\tingreds: " + ingredients.toString() + "\n\tinsns: \n";
+    String ret = "";
     Iterator<String> it = instructions.iterator();
     int i = 0;
     while (it.hasNext())
@@ -149,7 +146,6 @@ abstract class Recipe
       return convertDataToQuery(id);
     }
     catch (Exception e) { // cannot generate recipe for some reason (no search results, etc.)
-      // System.out.println(name + e);
       return "";
     }
   }
@@ -172,9 +168,6 @@ abstract class Recipe
 
   final String convertDataToQuery(int id)
   {
-    //String result = new StringBuilder(1024).append("INSERT INTO Recipes VALUES (").append(id).append(",").append(name+",othershit)").toString();
-    //String result = new StringBuilder(1024).append("INSERT INTO Recipes VALUES (").append(id).append(",").append(name).append(","+url).toString();
-
     // store the entire query (recipe table insert + ingredient table insert) in string
     String query = "INSERT INTO Recipes (RecipeName, URL, Image, TotalCookingTime, Instructions) VALUES (\n\t'" + name.replaceAll("'", "") + "',\n\t'" + url + "',\n\t'" + image + "',\n\t'" + time + "',\n\t'" + this.instructionsToString().replaceAll("'", "") + "'\n);\n";
     // iterate over ingredients and append to query
@@ -184,8 +177,9 @@ abstract class Recipe
       Ingredient i = it.next();
       query += "INSERT INTO Ingredients VALUES (\n\t" + id + ",\n\t'" + i.name().replaceAll("'", "") + "',\n\t" + i.qty() + ",\n\t'" + i.units().replaceAll("'", "") + "'\n);\n";
     }
-    //return query + "\n";
-    return query.replaceAll("[^\\x00-\\x7F]", "") + "\n";// also need to remove such things as &amp;
+
+    // remove all non-ASCII chars
+    return query.replaceAll("[^\\x00-\\x7F]", "") + "\n";
   }
 }
 
@@ -200,20 +194,17 @@ class AllRecipesRecipe extends Recipe
   {  
     String searchurl = "http://allrecipes.com/search/default.aspx?wt=" + searchedname.replaceAll(" ", "%20").replaceAll("&", "%26").replaceAll("\n", "");
 
-    Document doc1 = Jsoup.connect(searchurl).get(); // Java representation of DOM that our class methods will parse
+    Document doc1 = Jsoup.connect(searchurl).get();
 
     Elements links = doc1.select("a.title");
     String recipeurl = "";
     for (Element link : links)
     {
       // Extract innner html from elements containing ingredient name and amount
-      //doc = Jsoup.connect(link.attr("abs:href")).get();
-      //recipeurl = doc.location();
       recipeurl = link.attr("abs:href");
     }
     url = recipeurl; 
-    // System.out.println(url);
-    dom = Jsoup.connect(recipeurl).get(); // Java representation of DOM that our class methods will parse
+    dom = Jsoup.connect(recipeurl).get();
 
   }
   public void getName()
@@ -223,9 +214,7 @@ class AllRecipesRecipe extends Recipe
 
   public void getImage()
   {
-    // get image
     String imgurl = dom.select("img#imgPhoto").attr("src");
-    // TODO: replace with storing binary image file instead
     image = imgurl;
   }
 
@@ -237,7 +226,6 @@ class AllRecipesRecipe extends Recipe
     int i = 0;
     while (i < timetitle.length)
     {
-      // check for index out of bounds
       if (timetitle[i].toLowerCase().compareTo("hour") == 0 || timetitle[i].toLowerCase().compareTo("hours") == 0)
       {
         if (timetitle[i-1].length() == 1)
@@ -257,7 +245,6 @@ class AllRecipesRecipe extends Recipe
 
     while (i < timetitle.length)
     {
-      // check for index out of bounds
       if (timetitle[i].toLowerCase().compareTo("minute") == 0 || timetitle[i].toLowerCase().compareTo("minutes") == 0)
       {
         if (timetitle[i-1].length() == 1)
